@@ -1,36 +1,54 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
+
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.3.RELEASE")
+        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.17"
     }
 }
 
-allprojects {
+allprojects{
 
     apply plugin: 'java'
     apply plugin: 'idea'
-    apply plugin: 'org.springframework.boot'
 
     group 'com.jean.demo'
     version '1.0'
 
     sourceCompatibility = 1.8
-
     [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+}
+
+subprojects {
+
+    /**
+     * GIT信息
+     */
+    apply plugin: "com.gorylenko.gradle-git-properties"
+    apply plugin: 'org.springframework.boot'
+
 
     dependencyManagement {
         imports {
             mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Dalston.SR1'
         }
     }
-}
 
-subprojects {
+    gitProperties {
+        dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatTimeZone = "GMT+8:00"
+    }
 
     repositories {
         mavenCentral()
+        maven {
+            url "http://jcenter.bintray.com"
+        }
     }
 
     dependencies {
@@ -40,7 +58,16 @@ subprojects {
         compile("org.springframework.cloud:spring-cloud-starter-eureka-server")
         compile("org.springframework.cloud:spring-cloud-starter-security")
         compile("org.springframework.cloud:spring-cloud-config-client")
+        compile("io.github.swagger2markup:swagger2markup:1.3.1")
+
         testCompile("org.springframework.boot:spring-boot-starter-test")
         testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+
+    /**
+     * 扩展application.yml属性，从gradle读取，
+     */
+    processResources {
+        expand(project.properties)
     }
 }

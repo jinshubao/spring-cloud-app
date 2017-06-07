@@ -14,7 +14,7 @@ eureka:
     register-with-eureka: false
     fetch-registry: false
     service-url:
-      default-zone: http://${eureka.instance.hostname}:${server.port}/eureka/
+      default-zone: http://\${eureka.instance.hostname}:\${server.port}/eureka/
 
 endpoints:
   restart:
@@ -33,3 +33,8 @@ management:
       enabled: true
     status:
       order: DOWN, OUT_OF_SERVICE, UNKNOWN, UP #指定状态排序规则，可以实现HealthAggregator接口来实现该功能
+  info:
+    git:
+      enabled: true
+      mode: full
+  context-path: /manage

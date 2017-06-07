@@ -1,3 +1,0 @@
-processResources {
-    expand(project.properties)
-}
