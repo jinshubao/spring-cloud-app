@@ -1,0 +1,35 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: eureka-server
+
+eureka:
+  server:
+    enable-self-preservation: false
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      default-zone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+endpoints:
+  restart:
+    enabled: true
+  sensitive: false
+  enabled: true
+  health:
+    time-to-live: 5000 #5秒，默认1秒
+logging:
+  level: info
+management:
+  health:
+    cassandra:
+      enabled: true
+    defaults:
+      enabled: true
+    status:
+      order: DOWN, OUT_OF_SERVICE, UNKNOWN, UP #指定状态排序规则，可以实现HealthAggregator接口来实现该功能
