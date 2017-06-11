@@ -18,5 +18,4 @@ public class ApiApplication {
     RestTemplate restTemplate() {
         return new RestTemplate();
     }
-
 }

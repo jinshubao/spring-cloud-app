@@ -4,37 +4,28 @@ server:
 spring:
   application:
     name: eureka-server
-
+  sleuth:
+    sampler:
+      percentage: 1
 eureka:
   server:
-    enable-self-preservation: false
+    enable-self-preservation: true
   instance:
     hostname: localhost
+    preferIpAddress: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port} # 将Instance ID设置成IP:端口的形式
   client:
     register-with-eureka: false
     fetch-registry: false
     service-url:
-      default-zone: http://\${eureka.instance.hostname}:\${server.port}/eureka/
-
-endpoints:
-  restart:
-    enabled: true
-  sensitive: false
-  enabled: true
-  health:
-    time-to-live: 5000 #5秒，默认1秒
+      default-zone: http://${eureka.instance.hostname}:${server.port}/eureka/
 logging:
   level: info
+  file: target/log.log
 management:
-  health:
-    cassandra:
-      enabled: true
-    defaults:
-      enabled: true
-    status:
-      order: DOWN, OUT_OF_SERVICE, UNKNOWN, UP #指定状态排序规则，可以实现HealthAggregator接口来实现该功能
   info:
     git:
       enabled: true
       mode: full
-  context-path: /manage
+  security:
+    enabled: false
