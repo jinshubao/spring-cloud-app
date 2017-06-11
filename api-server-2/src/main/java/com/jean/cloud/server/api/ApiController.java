@@ -13,7 +13,7 @@ import java.util.Map;
  * Created by jinshubao on 2017/6/6.
  */
 @RestController
-@RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ApiController {
 
     @GetMapping("/{userId}/detail")

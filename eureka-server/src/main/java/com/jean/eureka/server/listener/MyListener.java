@@ -1,4 +1,4 @@
-package com.jean.cloud.server.listener;
+package com.jean.eureka.server.listener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
  * Created by jinshubao on 2017/6/11.
  */
 @Component
-public class MyApplicationEventListener {
+public class MyListener {
 
-    private static final Logger logger = LoggerFactory.getLogger(MyApplicationEventListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyListener.class);
 
     @EventListener
     public void onApplicationEvent(ApplicationReadyEvent event) {

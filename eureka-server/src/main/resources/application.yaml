@@ -9,7 +9,7 @@ spring:
       percentage: 1
 eureka:
   server:
-    enable-self-preservation: true
+    enable-self-preservation: false
   instance:
     hostname: localhost
     preferIpAddress: true
