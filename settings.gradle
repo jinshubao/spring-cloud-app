@@ -4,4 +4,5 @@ include 'eureka-server'
 include 'cloud-zuul'
 include 'api-server-1'
 include 'api-server-2'
+include 'zipkin-server'
 
