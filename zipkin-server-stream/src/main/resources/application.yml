@@ -1,0 +1,34 @@
+server:
+  port: 9412
+spring:
+  application:
+    name: zipkin-server-stream
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  datasource:
+    schema: classpath:mysql.sql
+    url: jdbc:mysql://localhost:3306/zipkin
+    username: root
+    password: root
+    continue-on-error: true
+    initialize: true
+
+zipkin:
+  storage:
+    type: mysql
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+logging:
+  level: debug
+
+
+info:
+  zipkin:
+    version: {project.version}
+    group: {project.group}

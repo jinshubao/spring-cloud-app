@@ -3,25 +3,7 @@ server:
 spring:
   application:
     name: zipkin-server
-  sleuth:
-    sampler:
-      percentage: 1.0
-    enabled: false
-  rabbitmq:
-    host: 127.0.0.1
-    port: 5672
-    username: guest
-    password: guest
-    virtualHost: /
-  datasource:
-     schema: classpath:/mysql.sql
-     url: jdbc:mysql://localhost:3306/zipkin?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
-     username: root
-     password: root
-     initialize: true
-     continueOnError: true
-     driver-class-name: com.mysql.jdbc.Driver
-     s
+
 eureka:
   client:
     serviceUrl:
@@ -32,3 +14,16 @@ logging:
 zipkin:
   storage:
     type: mysql
+    mysql:
+      host: localhost
+      port: 3306
+      username: root
+      password: root
+      db: zipkin
+      max-active: 10
+      use-ssl: false
+
+info:
+  zipkin:
+    version: {project.version}
+    group: {project.group}

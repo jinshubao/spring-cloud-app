@@ -1,11 +1,8 @@
 buildscript {
     repositories {
-        maven{
-            url "http://maven.aliyun.com/nexus/content/groups/public"
-        }
         mavenCentral()
         maven {
-            url "https://plugins.gradle.org/m2/"
+            url("https://plugins.gradle.org/m2/")
         }
     }
 
@@ -15,7 +12,7 @@ buildscript {
     }
 }
 
-allprojects{
+allprojects {
 
     apply plugin: 'java'
     apply plugin: 'idea'
@@ -28,6 +25,11 @@ allprojects{
 }
 
 subprojects {
+
+    ext {
+        brave_mysql = "4.3.4"
+        mysql = "5.1.41"
+    }
 
     /**
      * GIT信息
@@ -48,22 +50,14 @@ subprojects {
     }
 
     repositories {
-        maven{
-            url "http://maven.aliyun.com/nexus/content/groups/public"
-        }
         mavenCentral()
-        maven {
-            url "http://jcenter.bintray.com"
-        }
     }
 
     dependencies {
         compile("org.springframework.boot:spring-boot-starter-actuator")
         compile("org.springframework.boot:spring-boot-starter-web")
         compile("org.springframework.boot:spring-boot-starter-hateoas")
-        compile("org.springframework.cloud:spring-cloud-starter-eureka-server")
-        compile("org.springframework.cloud:spring-cloud-config-client")
-        compile("org.springframework.cloud:spring-cloud-starter-ribbon")
+        compile("org.springframework.cloud:spring-cloud-starter-eureka")
         compile("org.springframework.cloud:spring-cloud-starter-hystrix")
         compile("org.springframework.cloud:spring-cloud-starter-hystrix-dashboard")
         testCompile("org.springframework.boot:spring-boot-starter-test")
@@ -75,5 +69,75 @@ subprojects {
      */
     processResources {
         expand(project.properties)
+    }
+}
+
+project(":config-server") {
+    dependencies {
+        compile("org.springframework.cloud:spring-cloud-starter-config")
+        compile("org.springframework.cloud:spring-cloud-config-server")
+    }
+
+}
+
+project(":api-server-1") {
+    dependencies {
+        compile("org.springframework.cloud:spring-cloud-config-client")
+
+        compile("org.springframework.cloud:spring-cloud-sleuth-stream")//以消息中间件的方式传递数据
+        compile("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
+        compile("org.springframework.cloud:spring-cloud-starter-sleuth")
+
+//        compile("org.springframework.cloud:spring-cloud-starter-sleuth")
+//        compile("org.springframework.cloud:spring-cloud-sleuth-zipkin")
+//        compile("io.zipkin.brave:brave-mysql:${brave_mysql}")
+//        runtime("mysql:mysql-connector-java:${mysql}")
+    }
+}
+
+
+project(":api-server-2") {
+
+    dependencies {
+        compile("org.springframework.cloud:spring-cloud-config-client")
+
+        compile("org.springframework.cloud:spring-cloud-sleuth-stream")//以消息中间件的方式传递数据
+        compile("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
+        compile("org.springframework.cloud:spring-cloud-starter-sleuth")
+
+//        compile("org.springframework.cloud:spring-cloud-starter-sleuth")
+//        compile("org.springframework.cloud:spring-cloud-sleuth-zipkin")
+//        compile("io.zipkin.brave:brave-mysql:${brave_mysql}")
+//        runtime("mysql:mysql-connector-java:${mysql}")
+    }
+}
+project(":zipkin-server") {
+    dependencies {
+        compile("org.springframework.cloud:spring-cloud-config-client")
+        compile('io.zipkin.java:zipkin-server')
+
+        runtime("mysql:mysql-connector-java:${mysql}")
+        runtime('io.zipkin.java:zipkin-autoconfigure-ui')
+        runtime('io.zipkin.java:zipkin-autoconfigure-storage-mysql')
+    }
+}
+
+project(":zipkin-server-stream") {
+    dependencies {
+        compile("org.springframework.cloud:spring-cloud-config-client")
+        compile('org.springframework.cloud:spring-cloud-sleuth-zipkin-stream')//以消息中间件的方式传递数据
+        compile('org.springframework.cloud:spring-cloud-starter-stream-rabbit')
+        compile("org.springframework.boot:spring-boot-starter-jdbc")
+        runtime("mysql:mysql-connector-java:${mysql}")
+        runtime('io.zipkin.java:zipkin-autoconfigure-ui')
+    }
+}
+
+
+project(":turbine-server") {
+    dependencies {
+
+        compile("org.springframework.cloud:spring-cloud-config-client")
+        compile('org.springframework.cloud:spring-cloud-starter-turbine')
     }
 }
