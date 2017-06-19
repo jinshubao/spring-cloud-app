@@ -22,13 +22,13 @@ public class EurekaServerApplication {
 
     @EventListener
     public void onInstanceRegistered(InstanceRegisteredEvent<?> event) {
-        logger.info("onInstanceRegistered {}", event);
+        logger.info("InstanceRegisteredEvent {}", event);
     }
 
 
     @EventListener
     public void onParentHeartbeat(ParentHeartbeatEvent event) {
-        logger.info("onParentHeartbeat {}", event);
+        logger.info("ParentHeartbeatEvent {}", event);
     }
 
     @EventListener

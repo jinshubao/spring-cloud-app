@@ -29,6 +29,7 @@ subprojects {
     ext {
         brave_mysql = "4.3.4"
         mysql = "5.1.41"
+        swagger = "2.5.0"
     }
 
     /**
@@ -72,16 +73,24 @@ subprojects {
     }
 }
 
+project(":eureka-server") {
+    dependencies {
+        compile("org.springframework.cloud:spring-cloud-starter-eureka-server")
+    }
+}
+
 project(":config-server") {
     dependencies {
         compile("org.springframework.cloud:spring-cloud-starter-config")
         compile("org.springframework.cloud:spring-cloud-config-server")
     }
-
 }
 
 project(":api-server-1") {
     dependencies {
+        compile("io.springfox:springfox-swagger-ui:${swagger}")
+        compile("io.springfox:springfox-swagger2:${swagger}")
+
         compile("org.springframework.cloud:spring-cloud-config-client")
 
         compile("org.springframework.cloud:spring-cloud-sleuth-stream")//以消息中间件的方式传递数据
@@ -94,11 +103,13 @@ project(":api-server-1") {
 //        runtime("mysql:mysql-connector-java:${mysql}")
     }
 }
-
 
 project(":api-server-2") {
 
     dependencies {
+        compile("io.springfox:springfox-swagger-ui:${swagger}")
+        compile("io.springfox:springfox-swagger2:${swagger}")
+
         compile("org.springframework.cloud:spring-cloud-config-client")
 
         compile("org.springframework.cloud:spring-cloud-sleuth-stream")//以消息中间件的方式传递数据
@@ -111,9 +122,12 @@ project(":api-server-2") {
 //        runtime("mysql:mysql-connector-java:${mysql}")
     }
 }
+
 project(":zipkin-server") {
     dependencies {
         compile("org.springframework.cloud:spring-cloud-config-client")
+        //        compile("org.springframework.cloud:spring-cloud-starter-sleuth")
+//        compile("org.springframework.cloud:spring-cloud-sleuth-zipkin")
         compile('io.zipkin.java:zipkin-server')
 
         runtime("mysql:mysql-connector-java:${mysql}")

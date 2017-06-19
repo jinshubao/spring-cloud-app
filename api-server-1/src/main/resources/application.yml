@@ -35,3 +35,9 @@ management:
       mode: full
   security:
     enabled: false
+
+
+info:
+  app1:
+    version: ${project.version}
+    group: ${project.group}

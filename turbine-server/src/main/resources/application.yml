@@ -33,5 +33,5 @@ logging:
 
 info:
   turbine:
-    version: {project.version}
-    group: {project.group}
+    version: ${project.version}
+    group: ${project.group}

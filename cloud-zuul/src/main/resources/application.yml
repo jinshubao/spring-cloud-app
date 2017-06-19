@@ -21,3 +21,8 @@ zuul:
       serviceId: service-config
 logging:
   level: debug
+
+info:
+  zull:
+    version: ${project.version}
+    group: ${project.group}
