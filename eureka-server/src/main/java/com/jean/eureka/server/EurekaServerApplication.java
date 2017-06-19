@@ -25,7 +25,6 @@ public class EurekaServerApplication {
         logger.info("InstanceRegisteredEvent {}", event);
     }
 
-
     @EventListener
     public void onParentHeartbeat(ParentHeartbeatEvent event) {
         logger.info("ParentHeartbeatEvent {}", event);
