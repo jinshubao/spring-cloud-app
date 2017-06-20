@@ -4,38 +4,27 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
     <!-- Appender to log to file in a JSON format -->
-    <appender name="logstash" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_FILE}.json</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_FILE}.json.%d{yyyy-MM-dd}.gz</fileNamePattern>
-            <maxHistory>7</maxHistory>
-        </rollingPolicy>
-        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-            <providers>
-                <timestamp>
-                    <timeZone>UTC</timeZone>
-                </timestamp>
-                <pattern>
-                    <pattern>
-                        {
-                        "severity": "%level",
-                        "service": "${springAppName:-}",
-                        "trace": "%X{X-B3-TraceId:-}",
-                        "span": "%X{X-B3-SpanId:-}",
-                        "exportable": "%X{X-Span-Export:-}",
-                        "pid": "${PID:-}",
-                        "thread": "%thread",
-                        "class": "%logger{40}",
-                        "rest": "%message"
-                        }
-                    </pattern>
-                </pattern>
-            </providers>
-        </encoder>
+    <!--
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>127.0.0.1:4560</destination>
+        &lt;!&ndash; encoder is required &ndash;&gt;
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
+    -->
+    <appender name="LOGSTASH" class="com.cwbase.logback.RedisAppender">
+        <source>mySource</source>
+        <sourcePath>mySourcePath</sourcePath>
+        <type>myApplication</type>
+        <tags>dev</tags>
+        <host>10.52.2.205</host>
+        <port>6379</port>
+        <password>90-=op[]</password>
+        <database>13</database>
+        <key>logstash</key>
     </appender>
     <root level="INFO">
-        <appender-ref ref="logstash" />
-        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="LOGSTASH"/>
+        <appender-ref ref="CONSOLE"/>
     </root>
 
 </configuration>

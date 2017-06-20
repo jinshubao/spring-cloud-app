@@ -55,6 +55,7 @@ public class ApiController {
         result.put("code", "999");
         result.put("userId", userId);
         result.put("msg", "这是错误信息");
+        logger.info("error {}", result);
         return result;
     }
 
