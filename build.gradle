@@ -100,6 +100,7 @@ project(":api-server-1") {
         compile("org.springframework.cloud:spring-cloud-sleuth-stream")//以消息中间件的方式传递数据
         compile("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
         compile("org.springframework.cloud:spring-cloud-starter-sleuth")
+        compile("net.logstash.logback:logstash-logback-encoder:4.9")
 
 //        compile("org.springframework.cloud:spring-cloud-starter-sleuth")
 //        compile("org.springframework.cloud:spring-cloud-sleuth-zipkin")
