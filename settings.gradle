@@ -7,4 +7,6 @@ include 'api-server-2'
 include 'zipkin-server'
 include 'zipkin-server-stream'
 include 'turbine-server'
+include 'elasticsearch-server'
+include 'logging-starter'
 

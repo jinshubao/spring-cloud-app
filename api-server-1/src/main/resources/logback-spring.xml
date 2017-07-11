@@ -12,14 +12,13 @@
     </appender>
     -->
     <appender name="LOGSTASH" class="com.cwbase.logback.RedisAppender">
-        <source>mySource</source>
-        <sourcePath>mySourcePath</sourcePath>
-        <type>myApplication</type>
-        <tags>dev</tags>
-        <host>10.52.2.205</host>
+        <source>api-server-1</source>
+        <sourcePath>api-server-1</sourcePath>
+        <type>api-server</type>
+        <tags>api-server-1</tags>
+        <host>redis</host>
         <port>6379</port>
-        <password>90-=op[]</password>
-        <database>13</database>
+        <database>0</database>
         <key>logstash</key>
     </appender>
     <root level="INFO">

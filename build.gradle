@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-		maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         mavenCentral()
         maven {
             url("https://plugins.gradle.org/m2/")
@@ -10,6 +10,7 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.3.RELEASE")
         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.17"
+        classpath('se.transmode.gradle:gradle-docker:1.2')
     }
 }
 
@@ -17,28 +18,35 @@ allprojects {
 
     apply plugin: 'java'
     apply plugin: 'idea'
+    apply plugin: 'application'
 
     group 'com.jean.demo'
     version '1.0'
 
     sourceCompatibility = 1.8
     [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        mavenCentral()
+    }
+
 }
 
 subprojects {
-
-    ext {
-        brave_mysql = "4.3.4"
-        mysql = "5.1.41"
-        swagger = "2.5.0"
-    }
 
     /**
      * GIT信息
      */
     apply plugin: "com.gorylenko.gradle-git-properties"
     apply plugin: 'org.springframework.boot'
+    apply plugin: 'docker'
 
+    ext {
+        brave_mysql = "4.3.4"
+        mysql = "5.1.41"
+        swagger = "2.5.0"
+    }
 
     dependencyManagement {
         imports {
@@ -51,14 +59,28 @@ subprojects {
         dateFormatTimeZone = "GMT+8:00"
     }
 
-    repositories {
-		maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-        mavenCentral()
+    task buildDocker(type: Docker, dependsOn: build) {
+        push = false
+        baseImage "java"
+        maintainer 'Jinshubao jinshubao123@126.com'
+        addFile("${applicationName}-${version}.jar", "app.jar")
+        entryPoint(["java", "-jar", "app.jar"] as List)
+        doFirst {
+            copy {
+                from jar
+                into stageDir
+            }
+        }
     }
 
+    /**
+     * 扩展application.yml属性，从gradle读取，
+     */
+    processResources {
+        expand(project.properties)
+    }
 
     dependencies {
-        compile("org.springframework.boot:spring-boot-devtools")
         compile("org.springframework.boot:spring-boot-starter-actuator")
         compile("org.springframework.boot:spring-boot-starter-web")
         compile("org.springframework.boot:spring-boot-starter-hateoas")
@@ -67,13 +89,6 @@ subprojects {
         compile("org.springframework.cloud:spring-cloud-starter-hystrix-dashboard")
         testCompile("org.springframework.boot:spring-boot-starter-test")
         testCompile group: 'junit', name: 'junit', version: '4.12'
-    }
-
-    /**
-     * 扩展application.yml属性，从gradle读取，
-     */
-    processResources {
-        expand(project.properties)
     }
 }
 
@@ -122,6 +137,7 @@ project(":api-server-2") {
         compile("org.springframework.cloud:spring-cloud-sleuth-stream")//以消息中间件的方式传递数据
         compile("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
         compile("org.springframework.cloud:spring-cloud-starter-sleuth")
+        compile project(":logging-starter")
 
 //        compile("org.springframework.cloud:spring-cloud-starter-sleuth")
 //        compile("org.springframework.cloud:spring-cloud-sleuth-zipkin")
@@ -160,5 +176,11 @@ project(":turbine-server") {
 
         compile("org.springframework.cloud:spring-cloud-config-client")
         compile('org.springframework.cloud:spring-cloud-starter-turbine')
+    }
+}
+
+project(":logging-starter"){
+    dependencies{
+        compile("org.springframework.boot:spring-boot-starter")
     }
 }

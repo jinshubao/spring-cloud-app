@@ -8,25 +8,24 @@ spring:
     sampler:
       percentage: 1.0
 #  zipkin:
-     #base-url: http://localhost:9411 #配置spring.zipkin.locator.discovery.enable=true就不需要base-url
+     #base-url: http://localhost:9411
 #     locator:
 #       discovery:
 #         enabled: true
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+#  rabbitmq:
+#    host: localhost
+#    port: 5672
+#    username: guest
+#    password: guest
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://eureka-server:8761/eureka/
 
 logging:
   level: info
-    org.springframework.web.servlet.DispatcherServlet=debug
-  file: target/api-server.log
+  file: target/${spring.application.name}.log
 
 management:
   info:
@@ -40,3 +39,10 @@ info:
   app2:
     version: ${project.version}
     group: ${project.group}
+
+mylog:
+  expression: execution(* com.jean.cloud.server.api..*.*(..))||execution(* com.jean.cloud.server.listener..*.*(..))
+  location: locationxxxxxxxxxxxxxxxxxxxxxx
+  logParams: true
+  logResult: true
+  logCost: true
