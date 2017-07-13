@@ -2,25 +2,10 @@
 <configuration>
 	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
 	<include resource="org/springframework/boot/logging/logback/console-appender.xml" />
-	<property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
-	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<encoder>
-			<pattern>${FILE_LOG_PATTERN}</pattern>
-		</encoder>
-		<file>${LOG_FILE}</file>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.txt.zip</fileNamePattern>
-			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>50MB</maxFileSize>
-			</timeBasedFileNamingAndTriggeringPolicy>
-		</rollingPolicy>
-	</appender>
-	<appender name="REMOTE" class="com.jean.logging.appender.RemoteLogAppender">
-		<url>http://10.52.2.204:8088/db</url>
-	</appender>
-	<root level="INFO">
+	<include resource="com/jean/logging/logback/remote-logging.xml" />
+
+	<root level="warn">
 		<appender-ref ref="CONSOLE" />
-		<!--<appender-ref ref="FILE" />-->
-		<appender-ref ref="REMOTE" />
+		<appender-ref ref="REMOTE_LOG" />
 	</root>
 </configuration>

@@ -24,7 +24,10 @@ eureka:
       defaultZone: http://eureka-server:8761/eureka/
 
 logging:
-  level: info
+  level:
+    root: WARN
+    com.jean: DEBUG
+    org.springframework: WARN
   file: target/${spring.application.name}.log
 
 management:
@@ -46,3 +49,4 @@ mylog:
   logParams: true
   logResult: true
   logCost: true
+  remoteUrl: http://10.52.2.204:8088/db

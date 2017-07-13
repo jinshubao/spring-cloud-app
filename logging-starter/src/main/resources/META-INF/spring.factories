@@ -1,1 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.jean.logging.autoconfigure.LogAutoConfiguration
+org.springframework.context.ApplicationListener=com.jean.logging.listener.LoggingApplicationListener

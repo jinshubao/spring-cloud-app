@@ -15,4 +15,8 @@ public class RemoteLogAppender extends AppenderBase<LoggingEvent> {
         //TODO 发送日志到远程处理
 
     }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 }
