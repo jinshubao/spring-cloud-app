@@ -1,0 +1,10 @@
+server:
+  port: 9011
+spring:
+  application:
+    name: logging-server
+  redis:
+    host: 10.52.2.205
+    port: 6379
+    database: 4
+    password: 90-=op[]

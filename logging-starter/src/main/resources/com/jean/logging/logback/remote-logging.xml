@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    发送日志到远程服务器
+-->
+<included>
+    <appender name="REMOTE_LOG" class="com.jean.logging.appender.RemoteLogAppender">
+        <url>\${LOG_REMOTE_URL}</url>
+    </appender>
+</included>

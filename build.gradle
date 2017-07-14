@@ -20,6 +20,7 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'application'
 
+
     group 'com.jean.demo'
     version '1.0'
 
@@ -80,107 +81,4 @@ subprojects {
         expand(project.properties)
     }
 
-    dependencies {
-        compile("org.springframework.boot:spring-boot-starter-actuator")
-        compile("org.springframework.boot:spring-boot-starter-web")
-        compile("org.springframework.boot:spring-boot-starter-hateoas")
-        compile("org.springframework.cloud:spring-cloud-starter-eureka")
-        compile("org.springframework.cloud:spring-cloud-starter-hystrix")
-        compile("org.springframework.cloud:spring-cloud-starter-hystrix-dashboard")
-        testCompile("org.springframework.boot:spring-boot-starter-test")
-        testCompile group: 'junit', name: 'junit', version: '4.12'
-    }
-}
-
-project(":eureka-server") {
-    dependencies {
-        compile("org.springframework.cloud:spring-cloud-starter-eureka-server")
-    }
-}
-
-project(":config-server") {
-    dependencies {
-        compile("org.springframework.cloud:spring-cloud-starter-config")
-        compile("org.springframework.cloud:spring-cloud-config-server")
-    }
-}
-
-project(":api-server-1") {
-    dependencies {
-        compile("io.springfox:springfox-swagger-ui:${swagger}")
-        compile("io.springfox:springfox-swagger2:${swagger}")
-
-        compile("org.springframework.cloud:spring-cloud-config-client")
-
-        compile("com.cwbase:logback-redis-appender:1.1.5")
-
-        compile("org.springframework.cloud:spring-cloud-sleuth-stream")//以消息中间件的方式传递数据
-        compile("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
-        compile("org.springframework.cloud:spring-cloud-starter-sleuth")
-        compile("net.logstash.logback:logstash-logback-encoder:4.9")
-
-//        compile("org.springframework.cloud:spring-cloud-starter-sleuth")
-//        compile("org.springframework.cloud:spring-cloud-sleuth-zipkin")
-//        compile("io.zipkin.brave:brave-mysql:${brave_mysql}")
-//        runtime("mysql:mysql-connector-java:${mysql}")
-    }
-}
-
-project(":api-server-2") {
-
-    dependencies {
-        compile("io.springfox:springfox-swagger-ui:${swagger}")
-        compile("io.springfox:springfox-swagger2:${swagger}")
-
-        compile("org.springframework.cloud:spring-cloud-config-client")
-
-        compile("org.springframework.cloud:spring-cloud-sleuth-stream")//以消息中间件的方式传递数据
-        compile("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
-        compile("org.springframework.cloud:spring-cloud-starter-sleuth")
-        compile project(":logging-starter")
-
-//        compile("org.springframework.cloud:spring-cloud-starter-sleuth")
-//        compile("org.springframework.cloud:spring-cloud-sleuth-zipkin")
-//        compile("io.zipkin.brave:brave-mysql:${brave_mysql}")
-//        runtime("mysql:mysql-connector-java:${mysql}")
-    }
-}
-
-project(":zipkin-server") {
-    dependencies {
-        compile("org.springframework.cloud:spring-cloud-config-client")
-        //        compile("org.springframework.cloud:spring-cloud-starter-sleuth")
-//        compile("org.springframework.cloud:spring-cloud-sleuth-zipkin")
-        compile('io.zipkin.java:zipkin-server')
-
-        runtime("mysql:mysql-connector-java:${mysql}")
-        runtime('io.zipkin.java:zipkin-autoconfigure-ui')
-        runtime('io.zipkin.java:zipkin-autoconfigure-storage-mysql')
-    }
-}
-
-project(":zipkin-server-stream") {
-    dependencies {
-        compile("org.springframework.cloud:spring-cloud-config-client")
-        compile('org.springframework.cloud:spring-cloud-sleuth-zipkin-stream')//以消息中间件的方式传递数据
-        compile('org.springframework.cloud:spring-cloud-starter-stream-rabbit')
-        compile("org.springframework.boot:spring-boot-starter-jdbc")
-        runtime("mysql:mysql-connector-java:${mysql}")
-        runtime('io.zipkin.java:zipkin-autoconfigure-ui')
-    }
-}
-
-
-project(":turbine-server") {
-    dependencies {
-
-        compile("org.springframework.cloud:spring-cloud-config-client")
-        compile('org.springframework.cloud:spring-cloud-starter-turbine')
-    }
-}
-
-project(":logging-starter"){
-    dependencies{
-        compile("org.springframework.boot:spring-boot-starter")
-    }
 }
