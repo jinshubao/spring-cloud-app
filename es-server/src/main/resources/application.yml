@@ -1,0 +1,17 @@
+server:
+  port: 8006
+spring:
+  application:
+    name: es-server
+  data:
+    elasticsearch:
+      cluster-name: elasticsearch
+      cluster-nodes: 127.0.0.1:9300
+      local: false
+      repositories:
+        enable: true
+
+info:
+  config:
+    version: ${project.version}
+    group: ${project.group}

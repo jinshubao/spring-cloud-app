@@ -6,8 +6,6 @@ dependencies {
     compile("org.springframework.cloud:spring-cloud-starter-hystrix")
     compile("org.springframework.cloud:spring-cloud-starter-hystrix-dashboard")
     compile("org.springframework.cloud:spring-cloud-config-client")
-    //compile("org.springframework.cloud:spring-cloud-starter-sleuth")
-    //compile("org.springframework.cloud:spring-cloud-sleuth-zipkin")
     compile('io.zipkin.java:zipkin-server')
     runtime("mysql:mysql-connector-java:${mysql}")
     runtime('io.zipkin.java:zipkin-autoconfigure-ui')
