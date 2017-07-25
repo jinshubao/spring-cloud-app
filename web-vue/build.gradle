@@ -1,0 +1,5 @@
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    //compile 'org.webjars:vue:2.1.3'
+}

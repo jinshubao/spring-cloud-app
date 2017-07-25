@@ -1,0 +1,8 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: web-vue
+
+logging:
+  level: debug

@@ -11,4 +11,5 @@ include 'logging-starter'
 include 'logging-server'
 include 'es-server'
 include 'zipkin-server-stream-es'
+include 'web-vue'
 
