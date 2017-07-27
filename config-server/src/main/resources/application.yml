@@ -6,8 +6,9 @@ spring:
   cloud:
     config:
       server:
-        git:
+        db:
           uri: https://github.com/jinshubao/config-server.git
+          search-paths: config-repo
 eureka:
   client:
     serviceUrl:

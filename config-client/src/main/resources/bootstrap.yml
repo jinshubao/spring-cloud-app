@@ -17,6 +17,7 @@ eureka:
     serviceUrl:
       defaultZone: http://10.52.88.199:7013/eureka/
 
+
 logging:
   level: info
   file: log/${spring.application.name}.log
@@ -25,3 +26,8 @@ info:
   app1:
     version: ${project.version}
     group: ${project.group}
+
+
+management:
+  security:
+    enabled: false
