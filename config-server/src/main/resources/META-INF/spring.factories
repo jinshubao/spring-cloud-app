@@ -1,0 +1,2 @@
+# Autoconfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.jean.config.RepositoryConfiguration

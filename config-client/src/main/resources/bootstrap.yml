@@ -1,0 +1,27 @@
+server:
+  port: 8009
+
+spring:
+  application:
+    name: config-client
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+      label: master
+#      profile: dev
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.52.88.199:7013/eureka/
+
+logging:
+  level: info
+  file: log/${spring.application.name}.log
+
+info:
+  app1:
+    version: ${project.version}
+    group: ${project.group}

@@ -8,12 +8,10 @@ spring:
       server:
         git:
           uri: https://github.com/jinshubao/config-server.git
-          search-paths: cloud-config-repo
-
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://10.52.88.199:7013/eureka/
 
 info:
   config:
