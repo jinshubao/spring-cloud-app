@@ -1,6 +1,8 @@
 package com.jean.cloud.server.api;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import java.util.Map;
 /**
  * Created by jinshubao on 2017/6/6.
  */
+@Api(value = "User接口", description = "User接口")
 @RestController
 @RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ApiController {
@@ -36,6 +39,7 @@ public class ApiController {
     @Autowired
     SpanAccessor accessor;
 
+    @ApiOperation(value = "用户详情", notes = "用户详情")
     @GetMapping("/{userId}/detail")
     @HystrixCommand(fallbackMethod = "error")
     public Map userDetail(@PathVariable("userId") Integer userId) {

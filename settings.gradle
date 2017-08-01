@@ -13,4 +13,6 @@ include 'es-server'
 include 'zipkin-server-stream-es'
 include 'web-vue'
 include 'config-client'
+include 'spring-mybatis-demo'
+include 'swagger-spring-boot-starer'
 

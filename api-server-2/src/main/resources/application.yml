@@ -1,9 +1,6 @@
 server:
   port: 8005
 spring:
-  profiles:
-    active: dev
-
   application:
     name: api-server-2
   sleuth:
@@ -34,10 +31,6 @@ info:
   app2:
     version: ${project.version}
     group: ${project.group}
-
----
-spring:
-  profiles: dev
 
 mylog:
   expression: execution(* com.jean.cloud.server.api..*.*(..))||execution(* com.jean.cloud.server.listener..*.*(..))

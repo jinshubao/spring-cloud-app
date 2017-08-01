@@ -1,6 +1,6 @@
 dependencies {
-    compile("io.springfox:springfox-swagger-ui:${swagger}")
-    compile("io.springfox:springfox-swagger2:${swagger}")
+//    compile("io.springfox:springfox-swagger-ui:${swagger}")
+//    compile("io.springfox:springfox-swagger2:${swagger}")
     compile("org.springframework.boot:spring-boot-starter-actuator")
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-hateoas")
@@ -13,6 +13,8 @@ dependencies {
     compile("org.springframework.cloud:spring-cloud-starter-hystrix-dashboard")
     compile("com.cwbase:logback-redis-appender:1.1.5")
     compile("net.logstash.logback:logstash-logback-encoder:4.9")
+    compile project(":swagger-spring-boot-starer")
+
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile group: 'junit', name: 'junit', version: '4.12'
 //        compile("org.springframework.cloud:spring-cloud-starter-sleuth")

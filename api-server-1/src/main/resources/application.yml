@@ -40,3 +40,21 @@ info:
   app1:
     version: ${project.version}
     group: ${project.group}
+
+swagger:
+  enable: true
+  api-info:
+    description: User接口
+    license: http://www.test.com
+    license-url: http://www.test.com
+    terms-of-service-url: http://www.test.com
+    title: User接口
+    version: 2.5.1
+    contact:
+      email: test@qq.com
+      name: test
+      url: http://www.test.com
+  docket:
+    base-package: com.jean.cloud.server.api
+    group-name: user
+    pathMapping: /

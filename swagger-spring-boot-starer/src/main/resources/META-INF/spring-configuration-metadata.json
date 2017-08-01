@@ -1,0 +1,125 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties",
+      "name": "swagger",
+      "type": "com.jean.swagger.properties.SwaggerProperties"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.ApiInfoProperties",
+      "name": "swagger.apiInfo",
+      "type": "com.jean.swagger.properties.ApiInfoProperties"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.Contact",
+      "name": "swagger.apiInfo.contact",
+      "type": "com.jean.swagger.properties.Contact"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.DocketProperties",
+      "name": "swagger.docket",
+      "type": "com.jean.swagger.properties.DocketProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties",
+      "name": "swagger.enable",
+      "defaultValue": false,
+      "description": "是否启用swagger",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.ApiInfoProperties",
+      "name": "swagger.apiInfo.title",
+      "defaultValue": "1.0",
+      "description": "接口标题",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.ApiInfoProperties",
+      "name": "swagger.apiInfo.description",
+      "defaultValue": "1.0",
+      "description": "接口描述",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.ApiInfoProperties",
+      "name": "swagger.apiInfo.version",
+      "defaultValue": "1.0",
+      "description": "接口版本",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.shangying.config.SwaggerProperties",
+      "name": "swagger.apiInfo.contact",
+      "defaultValue": "",
+      "description": "联系方式",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.shangying.config.SwaggerProperties",
+      "name": "swagger.apiInfo.termsOfServiceUrl",
+      "defaultValue": "urn:tos",
+      "description": "",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.shangying.config.SwaggerProperties",
+      "name": "swagger.apiInfo.license",
+      "defaultValue": "Apache 2.0",
+      "description": "许可证",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.shangying.config.SwaggerProperties",
+      "name": "swagger.apiInfo.licenseUrl",
+      "defaultValue": "http://www.apache.org/licenses/LICENSE-2.0",
+      "description": "许可证URL",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.Contact",
+      "name": "swagger.apiInfo.contact.name",
+      "defaultValue": "",
+      "description": "联系人名称",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.Contact",
+      "name": "swagger.apiInfo.contact.url",
+      "defaultValue": "",
+      "description": "联系URL",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.Contact",
+      "name": "swagger.apiInfo.contact.email",
+      "defaultValue": "",
+      "description": "联系Email",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.DocketProperties",
+      "name": "swagger.docket.groupName",
+      "defaultValue": "DEFAULT",
+      "description": "分组名称",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.DocketProperties",
+      "name": "swagger.docket.basePackage",
+      "defaultValue": "",
+      "description": "扫描包路径",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.DocketProperties",
+      "name": "swagger.docket.pathMapping",
+      "defaultValue": "/",
+      "description": "访问路径",
+      "type": "java.lang.String"
+    }
+  ]
+}
