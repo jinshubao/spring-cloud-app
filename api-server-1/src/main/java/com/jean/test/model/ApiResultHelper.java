@@ -1,4 +1,4 @@
-package com.jean.cloud.server.model;
+package com.jean.test.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

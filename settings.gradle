@@ -1,7 +1,6 @@
 rootProject.name = 'spring-cloud-app'
 include 'config-server'
 include 'eureka-server'
-include 'cloud-zuul'
 include 'api-server-1'
 include 'api-server-2'
 include 'zipkin-server'
@@ -15,4 +14,5 @@ include 'web-vue'
 include 'config-client'
 include 'spring-mybatis-demo'
 include 'swagger-spring-boot-starer'
+include 'swagger-test'
 

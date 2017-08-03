@@ -1,4 +1,4 @@
-package com.jean.cloud.server;
+package com.jean.test.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.cloud.client.SpringCloudApplication;

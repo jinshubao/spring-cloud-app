@@ -1,0 +1,37 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: swagger-test
+
+info:
+  app1:
+    version: ${project.version}
+    group: ${project.group}
+
+swagger:
+  enable: true
+  api-info:
+    description: User接口
+    license:
+      name: test
+      url: http://www.test.com
+    terms-of-service-url: http://www.test.com
+    title: User接口
+    version: 2.5.1
+    contact:
+      email: test@qq.com
+      name: test
+      url: http://www.test.com
+  docket:
+    groupName: USER
+    apiPackage: com.jean.test.api
+    pathPrefix: /
+  responseMessage:
+    - code: 200
+      message: ok
+    - code: 400
+      message: 非法请求
+    - code: 500
+      message: 服务器忙

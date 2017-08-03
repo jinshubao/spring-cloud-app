@@ -46,7 +46,7 @@ subprojects {
     ext {
         brave_mysql = "4.3.4"
         mysql = "5.1.41"
-        swagger = "2.5.0"
+        swagger = "2.7.0"
     }
 
     dependencyManagement {

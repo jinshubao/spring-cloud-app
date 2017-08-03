@@ -1,4 +1,4 @@
-package com.jean.cloud.server.api;
+package com.jean.test.api;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import io.swagger.annotations.Api;
@@ -39,6 +39,7 @@ public class ApiController {
     @Autowired
     SpanAccessor accessor;
 
+    @Deprecated
     @ApiOperation(value = "用户详情", notes = "用户详情")
     @GetMapping("/{userId}/detail")
     @HystrixCommand(fallbackMethod = "error")

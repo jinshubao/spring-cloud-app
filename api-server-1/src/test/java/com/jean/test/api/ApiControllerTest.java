@@ -1,4 +1,4 @@
-package com.jean.cloud.server.api;
+package com.jean.test.api;
 
 import org.junit.Test;
 

@@ -45,8 +45,9 @@ swagger:
   enable: true
   api-info:
     description: User接口
-    license: http://www.test.com
-    license-url: http://www.test.com
+    license:
+      name: http://www.test.com
+      url: http://www.test.com
     terms-of-service-url: http://www.test.com
     title: User接口
     version: 2.5.1
@@ -55,6 +56,13 @@ swagger:
       name: test
       url: http://www.test.com
   docket:
-    base-package: com.jean.cloud.server.api
-    group-name: user
-    pathMapping: /
+    groupName: user
+    apiPackage: com.jean.testserver.api
+    pathPrefix: /
+  responseMessage:
+    - code: 200
+      message: ok
+    - code: 400
+      message: 非法请求
+    - code: 500
+      message: 服务器忙

@@ -1,4 +1,4 @@
-package com.jean.cloud.server.model;
+package com.jean.test.model;
 
 public class User {
 
