@@ -12,14 +12,14 @@
       "type": "com.jean.swagger.properties.SwaggerProperties.ApiInfoProperties"
     },
     {
-      "sourceType": "com.jean.swagger.properties.SwaggerProperties.Contact",
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.ContactProperties",
       "name": "swagger.apiInfo.contact",
-      "type": "com.jean.swagger.properties.SwaggerProperties.Contact"
+      "type": "com.jean.swagger.properties.SwaggerProperties.ContactProperties"
     },
     {
-      "sourceType": "com.jean.swagger.properties.SwaggerProperties.DocketProperties",
-      "name": "swagger.docket",
-      "type": "com.jean.swagger.properties.SwaggerProperties.DocketProperties"
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.LicenseProperties",
+      "name": "swagger.apiInfo.license",
+      "type": "com.jean.swagger.properties.SwaggerProperties.LicenseProperties"
     },
     {
       "sourceType": "com.jean.swagger.properties.SwaggerProperties.DocketProperties",
@@ -30,6 +30,11 @@
       "sourceType": "com.jean.swagger.properties.SwaggerProperties.ResponseMessageProperties",
       "name": "swagger.responseMessage",
       "type": "com.jean.swagger.properties.SwaggerProperties.ResponseMessageProperties"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.UiConfigurationProperties",
+      "name": "swagger.ui",
+      "type": "com.jean.swagger.properties.SwaggerProperties.UiConfigurationProperties"
     }
   ],
   "properties": [
@@ -39,6 +44,13 @@
       "defaultValue": false,
       "description": "是否启用swagger",
       "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.ApiInfoProperties",
+      "name": "swagger.apiInfo",
+      "defaultValue": "1.0",
+      "description": "接口标题",
+      "type": "java.lang.String"
     },
     {
       "sourceType": "com.jean.swagger.properties.SwaggerProperties.ApiInfoProperties",
@@ -62,53 +74,53 @@
       "type": "java.lang.String"
     },
     {
-      "sourceType": "com.shangying.config.SwaggerProperties",
-      "name": "swagger.apiInfo.contact",
-      "defaultValue": "",
-      "description": "联系方式",
-      "type": "java.lang.String"
-    },
-    {
-      "sourceType": "com.shangying.config.SwaggerProperties",
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.ApiInfoProperties",
       "name": "swagger.apiInfo.termsOfServiceUrl",
       "defaultValue": "",
       "description": "",
       "type": "java.lang.String"
     },
     {
-      "sourceType": "com.shangying.config.SwaggerProperties",
-      "name": "swagger.apiInfo.license",
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.LicenseProperties",
+      "name": "swagger.apiInfo.license.name",
       "defaultValue": "",
       "description": "许可证",
       "type": "java.lang.String"
     },
     {
-      "sourceType": "com.shangying.config.SwaggerProperties",
-      "name": "swagger.apiInfo.licenseUrl",
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.LicenseProperties",
+      "name": "swagger.apiInfo.license.url",
       "defaultValue": "",
       "description": "许可证URL",
       "type": "java.lang.String"
     },
     {
-      "sourceType": "com.jean.swagger.properties.SwaggerProperties.Contact",
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.ContactProperties",
       "name": "swagger.apiInfo.contact.name",
       "defaultValue": "",
       "description": "联系人名称",
       "type": "java.lang.String"
     },
     {
-      "sourceType": "com.jean.swagger.properties.SwaggerProperties.Contact",
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.ContactProperties",
       "name": "swagger.apiInfo.contact.url",
       "defaultValue": "",
       "description": "联系URL",
       "type": "java.lang.String"
     },
     {
-      "sourceType": "com.jean.swagger.properties.SwaggerProperties.Contact",
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.ContactProperties",
       "name": "swagger.apiInfo.contact.email",
       "defaultValue": "",
       "description": "联系Email",
       "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.DocketProperties",
+      "name": "swagger.docket.enable",
+      "defaultValue": false,
+      "description": "是否启用默认分组",
+      "type": "java.lang.Boolean"
     },
     {
       "sourceType": "com.jean.swagger.properties.SwaggerProperties.DocketProperties",
@@ -126,17 +138,24 @@
     },
     {
       "sourceType": "com.jean.swagger.properties.SwaggerProperties.DocketProperties",
+      "name": "swagger.docket.paths",
+      "defaultValue": [],
+      "description": "api列表",
+      "type": "java.util.Set<java.lang.String>"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.DocketProperties",
       "name": "swagger.docket.pathPrefix",
       "defaultValue": "",
       "description": "API访问前缀",
       "type": "java.lang.String"
     },
     {
-      "sourceType": "com.jean.swagger.properties.SwaggerProperties.ResponseMessageProperties",
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties",
       "name": "swagger.responseMessage",
       "defaultValue": "",
       "description": "返回码说明",
-      "type": "java.util.List"
+      "type": "java.util.List<com.jean.swagger.properties.SwaggerProperties.ResponseMessageProperties>"
     },
     {
       "sourceType": "com.jean.swagger.properties.SwaggerProperties.ResponseMessageProperties",
@@ -158,6 +177,69 @@
       "defaultValue": "",
       "description": "返回对象类型",
       "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.ResponseMessageProperties",
+      "name": "swagger.responseMessage.headers",
+      "defaultValue": "",
+      "description": "header",
+      "type": "java.util.Map<java.lang.String,java.lang.String>"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.UiConfigurationProperties",
+      "name": "swagger.ui.validatorUrl",
+      "defaultValue": "",
+      "description": "",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.UiConfigurationProperties",
+      "name": "swagger.ui.docExpansion",
+      "defaultValue": "",
+      "description": "",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.UiConfigurationProperties",
+      "name": "swagger.ui.apisSorter",
+      "defaultValue": "",
+      "description": "",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.UiConfigurationProperties",
+      "name": "swagger.ui.defaultModelRendering",
+      "defaultValue": "",
+      "description": "",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.UiConfigurationProperties",
+      "name": "swagger.ui.requestTimeout",
+      "defaultValue": "",
+      "description": "",
+      "type": "java.lang.Long"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.UiConfigurationProperties",
+      "name": "swagger.ui.supportedSubmitMethods",
+      "defaultValue": "",
+      "description": "",
+      "type": "java.lang.reflect.Array"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.UiConfigurationProperties",
+      "name": "swagger.ui.jsonEditor",
+      "defaultValue": true,
+      "description": "",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.jean.swagger.properties.SwaggerProperties.UiConfigurationProperties",
+      "name": "swagger.ui.showRequestHeaders",
+      "defaultValue": true,
+      "description": "",
+      "type": "java.lang.Boolean"
     }
   ]
 }

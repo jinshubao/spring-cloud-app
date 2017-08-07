@@ -3,7 +3,9 @@ package com.jean.swagger.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import springfox.documentation.service.Tag;
+import springfox.documentation.swagger.web.UiConfiguration;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 import static com.google.common.collect.Sets.newHashSet;
@@ -18,6 +20,16 @@ public class SwaggerProperties {
     private DocketProperties docket = new DocketProperties();
 
     private List<ResponseMessageProperties> responseMessage = new ArrayList<>();
+
+    private UiConfigurationProperties ui = new UiConfigurationProperties("validatorUrl",
+            "none",
+            "alpha",
+            "schema",
+            60000L,
+            UiConfiguration.Constants.DEFAULT_SUBMIT_METHODS,
+            true,
+            true);
+
 
     public boolean isEnable() {
         return enable;
@@ -49,6 +61,14 @@ public class SwaggerProperties {
 
     public void setResponseMessage(List<ResponseMessageProperties> responseMessage) {
         this.responseMessage = responseMessage;
+    }
+
+    public UiConfigurationProperties getUi() {
+        return ui;
+    }
+
+    public void setUi(UiConfigurationProperties ui) {
+        this.ui = ui;
     }
 
     public static class ApiInfoProperties {
@@ -110,13 +130,14 @@ public class SwaggerProperties {
     }
 
     public static class DocketProperties {
+        private boolean enable = false;
         private Set<String> protocols = newHashSet();
         private Set<String> produces = newHashSet();
         private Set<String> consumes = newHashSet();
         private Set<Tag> tags = newHashSet();
         private String groupName;
         private String apiPackage;
-        private String paths;
+        private Set<String> paths;
         private String pathPrefix;
         private String host = "";
 
@@ -144,11 +165,11 @@ public class SwaggerProperties {
             this.pathPrefix = pathPrefix;
         }
 
-        public String getPaths() {
+        public Set<String> getPaths() {
             return paths;
         }
 
-        public void setPaths(String paths) {
+        public void setPaths(Set<String> paths) {
             this.paths = paths;
         }
 
@@ -190,6 +211,14 @@ public class SwaggerProperties {
 
         public void setHost(String host) {
             this.host = host;
+        }
+
+        public boolean isEnable() {
+            return enable;
+        }
+
+        public void setEnable(boolean enable) {
+            this.enable = enable;
         }
     }
 
@@ -247,11 +276,6 @@ public class SwaggerProperties {
         }
     }
 
-
-    public static class ResponseMessageBean {
-
-    }
-
     public static class ResponseMessageProperties {
         private int code;
         private String message;
@@ -288,6 +312,95 @@ public class SwaggerProperties {
 
         public void setHeaders(Map<String, String> headers) {
             this.headers = headers;
+        }
+    }
+
+    public static class UiConfigurationProperties {
+
+        private String validatorUrl;
+        private String docExpansion;
+        private String apisSorter;
+        private String defaultModelRendering;
+        private Long requestTimeout;
+        private String[] supportedSubmitMethods;
+        private boolean jsonEditor;
+        private boolean showRequestHeaders;
+
+        public UiConfigurationProperties() {
+        }
+        public UiConfigurationProperties(String validatorUrl, String docExpansion, String apisSorter, String defaultModelRendering, Long requestTimeout, String[] supportedSubmitMethods, boolean jsonEditor, boolean showRequestHeaders) {
+            this.validatorUrl = validatorUrl;
+            this.docExpansion = docExpansion;
+            this.apisSorter = apisSorter;
+            this.defaultModelRendering = defaultModelRendering;
+            this.requestTimeout = requestTimeout;
+            this.supportedSubmitMethods = supportedSubmitMethods;
+            this.jsonEditor = jsonEditor;
+            this.showRequestHeaders = showRequestHeaders;
+        }
+
+        public String getValidatorUrl() {
+            return validatorUrl;
+        }
+
+        public void setValidatorUrl(String validatorUrl) {
+            this.validatorUrl = validatorUrl;
+        }
+
+        public String getDocExpansion() {
+            return docExpansion;
+        }
+
+        public void setDocExpansion(String docExpansion) {
+            this.docExpansion = docExpansion;
+        }
+
+        public String getApisSorter() {
+            return apisSorter;
+        }
+
+        public void setApisSorter(String apisSorter) {
+            this.apisSorter = apisSorter;
+        }
+
+        public String getDefaultModelRendering() {
+            return defaultModelRendering;
+        }
+
+        public void setDefaultModelRendering(String defaultModelRendering) {
+            this.defaultModelRendering = defaultModelRendering;
+        }
+
+        public Long getRequestTimeout() {
+            return requestTimeout;
+        }
+
+        public void setRequestTimeout(Long requestTimeout) {
+            this.requestTimeout = requestTimeout;
+        }
+
+        public String[] getSupportedSubmitMethods() {
+            return supportedSubmitMethods;
+        }
+
+        public void setSupportedSubmitMethods(String[] supportedSubmitMethods) {
+            this.supportedSubmitMethods = supportedSubmitMethods;
+        }
+
+        public boolean isJsonEditor() {
+            return jsonEditor;
+        }
+
+        public void setJsonEditor(boolean jsonEditor) {
+            this.jsonEditor = jsonEditor;
+        }
+
+        public boolean isShowRequestHeaders() {
+            return showRequestHeaders;
+        }
+
+        public void setShowRequestHeaders(boolean showRequestHeaders) {
+            this.showRequestHeaders = showRequestHeaders;
         }
     }
 }

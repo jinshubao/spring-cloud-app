@@ -13,7 +13,7 @@ public class RemoteLogAppender extends AppenderBase<LoggingEvent> {
     @Override
     protected void append(LoggingEvent event) {
         //TODO 发送日志到远程处理
-
+        System.out.println(event.toString());
     }
 
     public void setUrl(String url) {

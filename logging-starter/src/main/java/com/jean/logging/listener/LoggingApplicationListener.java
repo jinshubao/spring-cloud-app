@@ -9,7 +9,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.Map;
 
 /**
- * 监听应用启动时间，配置log
+ * 监听应用启动事件，配置log
  * Created by jinshubao on 2017/7/12.
  */
 public class LoggingApplicationListener implements ApplicationListener<ApplicationEvent> {

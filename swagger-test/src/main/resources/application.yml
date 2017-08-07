@@ -6,7 +6,7 @@ spring:
     name: swagger-test
 
 info:
-  app1:
+  swagger-test:
     version: ${project.version}
     group: ${project.group}
 
@@ -21,10 +21,11 @@ swagger:
     title: User接口
     version: 2.5.1
     contact:
-      email: test@qq.com
-      name: test
+      email: zhangsan@qq.com
+      name: zhangsan
       url: http://www.test.com
   docket:
+    enable: true
     groupName: USER
     apiPackage: com.jean.test.api
     pathPrefix: /
@@ -35,3 +36,5 @@ swagger:
       message: 非法请求
     - code: 500
       message: 服务器忙
+  ui:
+    supportedSubmitMethods:
