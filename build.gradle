@@ -62,10 +62,11 @@ subprojects {
 
     task buildDocker(type: Docker, dependsOn: build) {
         push = false
-        baseImage "java"
-        maintainer 'Jinshubao jinshubao123@126.com'
+        baseImage = "java"
+        maintainer = 'jinshubao jinshubao123@126.com'
+        exposePort(8080)
         addFile("${applicationName}-${version}.jar", "app.jar")
-        entryPoint(["java", "-jar", "app.jar"] as List)
+        entryPoint(["java", "-jar", "app.jar"])
         doFirst {
             copy {
                 from jar
