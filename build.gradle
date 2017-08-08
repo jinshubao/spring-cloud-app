@@ -62,11 +62,14 @@ subprojects {
 
     task buildDocker(type: Docker, dependsOn: build) {
         push = false
-        baseImage = "java"
+        baseImage = "openjdk:8-jre-alpine"
         maintainer = 'jinshubao jinshubao123@126.com'
         exposePort(8080)
+        setEnvironment("SERVER_PORT", "8080")
+        setEnvironment("SPRING_APPLICATION_NAME", "${applicationName}")
         addFile("${applicationName}-${version}.jar", "app.jar")
-        entryPoint(["java", "-jar", "app.jar"])
+        volume("/tmp")
+        entryPoint(["java", "-jar", "app.jar", "--server.port=\${SERVER_PORT}", "--spring.appliation.name=\${SPRING_APPLICATION_NAME}"])
         doFirst {
             copy {
                 from jar

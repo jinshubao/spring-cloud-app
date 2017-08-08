@@ -36,5 +36,3 @@ swagger:
       message: 非法请求
     - code: 500
       message: 服务器忙
-  ui:
-    supportedSubmitMethods:
