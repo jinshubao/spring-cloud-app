@@ -15,4 +15,5 @@ include 'config-client'
 include 'spring-mybatis-demo'
 include 'swagger-spring-boot-starer'
 include 'swagger-test'
+include 'document-generator'
 

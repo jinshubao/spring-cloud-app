@@ -1,0 +1,192 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/' }
+        //mavenLocal()
+    }
+    dependencies {
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+        classpath 'io.github.swagger2markup:swagger2markup-spring-restdocs-ext:1.2.0'
+        classpath 'io.github.swagger2markup:swagger2markup-gradle-plugin:1.2.0'
+        classpath "org.ajoberstar:gradle-git:1.5.1"
+        classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.10.1'
+    }
+}
+
+apply plugin: 'org.asciidoctor.convert'
+apply plugin: 'io.github.swagger2markup'
+apply plugin: 'org.ajoberstar.github-pages'
+
+
+ext {
+    encode = "UTF-8"
+    asciiDocOutputDir = file("${buildDir}/asciidoc/generated")
+    swaggerOutputDir = file("${buildDir}/swagger")
+    filename = "swagger.json"
+//    tags = []
+//    paths = []
+
+    apiLocatoin = "http://localhost:8011"
+    apiGroup = "user"
+}
+
+
+task generateJsonFile << {
+    def toJson = { url ->
+        def array = url.toString().split("\\?")
+        def params = []
+        if (array && array.length > 1) {
+            def param = array[1]
+            def ps = param.split("&")
+            if (ps) {
+                ps.each {
+                    def pls = it.split("=")
+                    if (pls && pls.length > 1) {
+                        params << pls[0] + "=" + URLEncoder.encode(pls[1], encode as String)
+                    }
+                }
+            }
+        }
+        def newUrl = array[0]
+        if (params) {
+            newUrl += "?"
+            newUrl += params.join("&")
+        }
+
+        def builder = new StringBuilder()
+        println "URL:${newUrl}"
+        newUrl.toURL().eachLine(encode as String) {
+            builder << it
+        }
+        return builder.toString()
+    }
+
+    def jsonFile = file(swaggerOutputDir)
+    if (!jsonFile.exists()) {
+        jsonFile.mkdirs()
+    }
+    jsonFile = file("${swaggerOutputDir}/${filename}")
+    def swaggerHost = "${apiLocatoin}/swagger-resources"
+    def resources = toJson(swaggerHost)
+    new URL(swaggerHost).eachLine(encode as String) {
+        resources << it.toString()
+    }
+    def resList = new JsonSlurper().parseText(resources.toString()) as List
+
+    def list = []
+    for (int i = 0; i < resList.size(); i++) {
+        if (apiGroup) {
+            if (apiGroup == resList[i].name) {
+                list << toJson("${apiLocatoin}${resList[i].location}")
+                break
+            }
+        } else {
+            def location = "${apiLocatoin}${resList[i].location}"
+            list << toJson(location)
+        }
+    }
+    if (!list || list.isEmpty()) {
+        println '"' + apiGroup + '"接口文档不存在'
+    }
+    def dft = new JsonSlurper().parseText(list[0]) as Map
+    if (list.size() > 1) {
+        for (int i = 1; i < list.size(); i++) {
+            def temp = new JsonSlurper().parseText(list[i]) as Map
+            def ls = []
+            (temp.tags as List).each() { t ->
+                def ct = false
+                (dft.tags as List).each { d ->
+                    if (t.name == d.name) {
+                        ct = true
+                    }
+                }
+                if (!ct) {
+                    ls << t
+                }
+            }
+            dft.tags += ls
+            dft.paths += temp.paths
+            dft.definitions += temp.definitions
+        }
+    }
+    /*
+    if (tags) {
+        def tgs = []
+        dft.tags.each { ot ->
+            tags.each { nt ->
+                if (ot.name == nt) {
+                    tgs << ot
+                }
+            }
+        }
+        dft.tags = tgs
+    }
+
+    if (paths) {
+        def ps = [:]
+        paths.each {
+            ps.put(it, dft.paths.it)
+        }
+        dft.paths = ps
+    }
+    */
+
+    //替换operationId为path
+
+    def idx = 1
+    dft.paths.each { path, df ->
+        if (df) {
+            df.each { method, detail ->
+                if (detail) {
+                    if (detail.operationId) {
+                        detail.operationId = path.replaceAll("/","_") + "_" + method
+                        println "|${idx++} |<<${detail.operationId},${detail.description}>>|${detail.description}|yyyy年mm月dd日"
+                    }
+                }
+            }
+        }
+    }
+
+    jsonFile << JsonOutput.toJson(dft)
+
+}
+
+convertSwagger2markup {
+
+    dependsOn generateJsonFile
+
+    swaggerInput "${swaggerOutputDir}/${filename}"
+    outputDir asciiDocOutputDir
+    config = [
+            'swagger2markup.outputLanguage'          : 'ZH',
+            'swagger2markup.markupLanguage'          : 'ASCIIDOC',
+            'swagger2markup.pathsGroupedBy'          : 'TAGS',
+            'swagger2markup.generatedExamplesEnabled': 'true',
+            'swagger2markup.flatBodyEnabled'         : 'true']
+}
+
+asciidoctor {
+    dependsOn convertSwagger2markup
+    sources {
+        include 'index.adoc'
+    }
+//    backends = ['html5',"pdf"]
+    backends = ['html5']
+    attributes = [
+            doctype             : 'book',
+            toc                 : 'left',
+            toclevels           : '3',
+            numbered            : '',
+            sectlinks           : '',
+            sectanchors         : '',
+            hardbreaks          : '',
+            generated           : asciiDocOutputDir,
+            'source-highlighter': 'coderay',
+            'toc-title'         : '目录',
+            'pdf-fontsdir'      : 'fonts'
+    ]
+}

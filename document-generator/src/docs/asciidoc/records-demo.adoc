@@ -1,0 +1,36 @@
+== 变更记录
+
+=== V2.3.0 接口变更记录
+
+[options="header", cols=".^2,.^5,.^9]
+|===
+|序号|接口|描述
+|1|<<_api_user_list_get,用户列表>>|修改请求参数
+|===
+
+=== 链接地址拼写方法
+
+链接地址的拼写方法为：'_' + '小写的接口方法名' + 'using' + '请求方法(get/post/put/delete/option)'
+
+例如：
+
+```
+@RestController
+@RequestMapping(value = "/api/user", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@Api(value = "用户接口", description = "用户接口相关接口")
+class UserApi {
+
+    /**
+     * 我的投资首页统计
+     * @param token
+     * @return
+     */
+    @GetMapping(value = "/list")
+    @ApiOperation(value = "用户列表", notes = "用户列表")
+    ApiSimpleResultHelper<User> userList() throws Exception {
+        //TODO
+        return null
+    }
+
+```
+以上代接口在链接地址中的写法为 <<_userlistusingget, 用户列表>>

@@ -62,7 +62,7 @@ subprojects {
 
     task buildDocker(type: Docker, dependsOn: build) {
         push = false
-        baseImage = "openjdk:8-jre-alpine"
+        baseImage = "openjdk:latest"
         maintainer = 'jinshubao jinshubao123@126.com'
         exposePort(8080)
         setEnvironment("SERVER_PORT", "8080")
