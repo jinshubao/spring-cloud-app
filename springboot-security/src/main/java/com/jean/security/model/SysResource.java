@@ -1,9 +1,6 @@
 package com.jean.security.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -24,8 +21,8 @@ public class SysResource {
     @Column(name = "description", length = 400)
     private String description;
 
-    @Column(name = "http_method", length = 20)
-    private String httpMethod;
+    @Column(name = "method", length = 20)
+    private String method;
 
     @Column(name = "enable", nullable = false)
     private Boolean enable;
@@ -33,12 +30,11 @@ public class SysResource {
     //@ManyToMany注释表示SysResource是多对多关系的一端。
     //@JoinTable描述了多对多关系的数据表关系。name属性指定中间表名称，joinColumns定义中间表与SysResource表的外键关系。
     //中间表sys_authority_resource的resource_id列是SysResource表的主键列对应的外键列，inverseJoinColumns属性定义了中间表与另外一端(SysAuthority)的外键关系。
-    @JsonIgnore
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "sys_authority_resource",
-            joinColumns = { @JoinColumn(name = "resource_id", referencedColumnName = "id") },
-            inverseJoinColumns = { @JoinColumn(name = "authority_id", referencedColumnName = "id") })
-    private Set<SysAuthority> authorities = new HashSet<>();
+            joinColumns = {@JoinColumn(name = "resource_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")})
+    private Set<SysAuthority> authorities;
 
     public Integer getId() {
         return id;
@@ -72,12 +68,12 @@ public class SysResource {
         this.name = name;
     }
 
-    public String getHttpMethod() {
-        return httpMethod;
+    public String getMethod() {
+        return method;
     }
 
-    public void setHttpMethod(String httpMethod) {
-        this.httpMethod = httpMethod;
+    public void setMethod(String method) {
+        this.method = method;
     }
 
     public Boolean getEnable() {

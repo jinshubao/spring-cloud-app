@@ -16,6 +16,12 @@ spring:
       ddl-auto: update
     show-sql: true
     generate-ddl: true
+#    properties:
+#      hibernate.format_sql: true
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
 
 
 info:

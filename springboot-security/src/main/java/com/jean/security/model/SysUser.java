@@ -3,7 +3,6 @@ package com.jean.security.model;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -18,7 +17,7 @@ public class SysUser {
     @Column(name = "username", unique = true, nullable = false, length = 200)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false, length = 100)
     private String password;
 
     @Column(name = "account_non_expired", nullable = false)
@@ -39,8 +38,8 @@ public class SysUser {
     @Column(name = "create_time", nullable = false)
     private Date createTime;
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
-    private Set<SysRole> roles = new HashSet<>();
+    @ManyToMany(mappedBy = "users")
+    private Set<SysRole> roles;
 
     public Integer getId() {
         return id;
@@ -57,7 +56,6 @@ public class SysUser {
     public void setUsername(String username) {
         this.username = username;
     }
-
 
     public String getPassword() {
         return password;

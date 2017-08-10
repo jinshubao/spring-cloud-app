@@ -1,9 +1,6 @@
 package com.jean.security.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -23,15 +20,14 @@ public class SysRole {
     @Column(name = "enable", nullable = false)
     private Boolean enable;
 
-    @ManyToMany(mappedBy = "roles",fetch = FetchType.EAGER)
-    private Set<SysAuthority> authorities = new HashSet<>();
+    @ManyToMany(mappedBy = "roles")
+    private Set<SysAuthority> authorities;
 
-    @JsonIgnore
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "sys_user_role",
-            joinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "id") },
-            inverseJoinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") })
-    private Set<SysUser> users = new HashSet<>();
+            joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
+    private Set<SysUser> users;
 
     public Integer getId() {
         return id;
@@ -48,6 +44,7 @@ public class SysRole {
     public void setName(String name) {
         this.name = name;
     }
+
     public String getDescription() {
         return description;
     }
