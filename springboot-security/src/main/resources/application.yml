@@ -1,0 +1,51 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: springboot-security
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/sys_pro
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    generate-ddl: true
+
+
+info:
+  springboot-security:
+    version: ${project.version}
+    group: ${project.group}
+
+swagger:
+  enable: true
+  api-info:
+    description: User接口
+    license:
+      name: test
+      url: http://www.test.com
+    terms-of-service-url: http://www.test.com
+    title: User接口
+    version: 2.5.1
+    contact:
+      email: zhangsan@qq.com
+      name: zhangsan
+      url: http://www.test.com
+  docket:
+    enable: true
+    groupName: USER
+    apiPackage: com.jean.security.api
+    pathPrefix: /
+  responseMessage:
+    - code: 200
+      message: ok
+    - code: 400
+      message: 非法请求
+    - code: 500
+      message: 服务器忙
