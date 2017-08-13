@@ -1,5 +1,6 @@
 rootProject.name = 'spring-cloud-app'
 include 'config-server'
+include 'cloud-zuul'
 include 'eureka-server'
 include 'api-server-1'
 include 'api-server-2'

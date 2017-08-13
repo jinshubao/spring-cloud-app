@@ -1,14 +1,12 @@
 package com.jean.security.api;
 
-import com.jean.security.model.SysUser;
-import com.jean.security.model.dto.UserDto;
+import com.jean.security.entity.SysUser;
 import com.jean.security.service.SysRoleService;
 import com.jean.security.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,20 +27,13 @@ public class UserApi {
     }
 
     @PostMapping("/add")
-    public UserDto add(@RequestBody SysUser user) {
+    public SysUser add(@RequestBody SysUser user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        SysUser usr = userService.saveAndFlush(user);
-        return new UserDto(usr);
+        return userService.save(user);
     }
 
     @GetMapping("/list")
-    public List<UserDto> list() {
-
-        List<SysUser> users = userService.findAll();
-        List<UserDto> list = new ArrayList();
-        for (SysUser user : users) {
-            list.add(new UserDto(user));
-        }
-        return list;
+    public List<SysUser> list() {
+        return userService.findAll();
     }
 }

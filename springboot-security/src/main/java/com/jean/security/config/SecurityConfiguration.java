@@ -54,7 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new HeaderHttpSessionStrategy();
     }
 
-    @Bean
+//    @Bean
     FilterInvocationSecurityMetadataSource metadataSource() {
         LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> requestMap = new LinkedHashMap<>();
 
@@ -68,7 +68,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new DefaultFilterInvocationSecurityMetadataSource(requestMap);
     }
 
-    @Bean
+//    @Bean
     public Filter filter(FilterInvocationSecurityMetadataSource metadataSource) {
         FilterSecurityInterceptor interceptor = new FilterSecurityInterceptor();
         interceptor.setSecurityMetadataSource(metadataSource);

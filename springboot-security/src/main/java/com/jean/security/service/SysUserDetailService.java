@@ -1,8 +1,7 @@
 package com.jean.security.service;
 
-import com.jean.security.model.SysRole;
-import com.jean.security.model.SysUser;
-import com.jean.security.model.SysUserDetail;
+import com.jean.security.entity.SysRole;
+import com.jean.security.entity.SysUser;
 import com.jean.security.repository.SysUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -38,6 +37,12 @@ public class SysUserDetailService implements UserDetailsService {
         for (SysRole role : user.getRoles()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
         }
-        return new SysUserDetail(user, authorities);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(),
+                user.isEnabled(),
+                user.isAccountNonExpired(),
+                user.isCredentialsNonExpired(),
+                user.isAccountNonLocked()
+                , authorities);
     }
 }

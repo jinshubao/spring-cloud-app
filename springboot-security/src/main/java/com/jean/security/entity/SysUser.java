@@ -1,53 +1,38 @@
-package com.jean.security.model;
+package com.jean.security.entity;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "sys_user")
-public class SysUser {
+@DynamicUpdate
+@Inheritance(strategy = InheritanceType.JOINED)
+public class SysUser extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", length = 10)
-    private Integer id;
-
-    @Column(name = "username", unique = true, nullable = false, length = 200)
+    @Column(unique = true, nullable = false, updatable = false)
     private String username;
 
-    @Column(name = "password", nullable = false, length = 100)
+    @JsonIgnore
+    @Column(nullable = false)
     private String password;
 
-    @Column(name = "account_non_expired", nullable = false)
     private boolean accountNonExpired;
 
-    @Column(name = "account_non_locked", nullable = false)
     private boolean accountNonLocked;
 
-    @Column(name = "credentials_non_expired", nullable = false)
     private boolean credentialsNonExpired;
 
-    @Column(name = "enabled", nullable = false)
-    private boolean enabled;
-
-    @Column(name = "email", nullable = false, length = 200)
     private String email;
 
-    @Column(name = "create_time", nullable = false)
-    private Date createTime;
-
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @JoinTable(name = "sys_user_role",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<SysRole> roles;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;
@@ -89,28 +74,12 @@ public class SysUser {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
     }
 
     public Set<SysRole> getRoles() {

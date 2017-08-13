@@ -1,38 +1,30 @@
 package com.jean.security.api;
 
-import com.jean.security.model.SysAuthority;
-import com.jean.security.model.dto.AuthorityDto;
-import com.jean.security.repository.SysAuthorityRepository;
+import com.jean.security.entity.SysAuthority;
+import com.jean.security.service.SysAuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/authority")
 public class AuthorityApi {
 
-    private final SysAuthorityRepository authorityRepository;
+    private final SysAuthorityService authorityService;
 
     @Autowired
-    public AuthorityApi(SysAuthorityRepository authorityRepository) {
-        this.authorityRepository = authorityRepository;
+    public AuthorityApi(SysAuthorityService authorityService) {
+        this.authorityService = authorityService;
     }
 
     @PostMapping("/add")
-    public AuthorityDto add(@RequestBody SysAuthority authority) {
-        SysAuthority a = authorityRepository.saveAndFlush(authority);
-        return new AuthorityDto(a);
+    public SysAuthority add(@RequestBody SysAuthority authority) {
+        return authorityService.save(authority);
     }
 
     @GetMapping("/list")
-    public List<AuthorityDto> list() {
-        List<SysAuthority> authorities = authorityRepository.findAll();
-        ArrayList<AuthorityDto> list = new ArrayList<>();
-        for (SysAuthority authority : authorities) {
-            list.add(new AuthorityDto(authority));
-        }
-        return list;
+    public List<SysAuthority> list() {
+        return authorityService.findAll();
     }
 }
