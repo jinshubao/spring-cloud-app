@@ -1,4 +1,4 @@
-package com.jean.cloud.server.listener;
+package com.jean.test.listener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MyApplicationEventListener {
-
     private static final Logger logger = LoggerFactory.getLogger(MyApplicationEventListener.class);
 
     @EventListener
@@ -24,12 +23,12 @@ public class MyApplicationEventListener {
 
     @EventListener
     public void onInstanceRegistered(InstanceRegisteredEvent<?> event) {
-        logger.info("============onInstanceRegistered {}", event);
+        logger.info("============InstanceRegisteredEvent {}", event);
     }
 
     @EventListener
     public void onParentHeartbeat(ParentHeartbeatEvent event) {
-        logger.info("============onParentHeartbeat {}", event);
+        logger.info("============ParentHeartbeatEvent {}", event);
     }
 
     @EventListener

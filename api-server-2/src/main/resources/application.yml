@@ -2,7 +2,7 @@ server:
   port: 8005
 spring:
   application:
-    name: api-server-2
+    name: user-service
   sleuth:
     sampler:
       percentage: 1.0

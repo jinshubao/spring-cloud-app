@@ -18,4 +18,5 @@ include 'swagger-spring-boot-starer'
 include 'swagger-test'
 include 'document-generator'
 include 'springboot-security'
+include 'user-service-jpa'
 

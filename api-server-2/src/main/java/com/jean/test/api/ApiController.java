@@ -1,4 +1,4 @@
-package com.jean.cloud.server.api;
+package com.jean.test.api;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,6 @@ public class ApiController {
 
     @GetMapping("/{userId}/detail")
     public Map<String, Object> userDetail(@PathVariable("userId") Integer userId) {
-
         Map<String, Object> detail = new HashMap<>();
         detail.put("userId", userId);
         detail.put("name", "zhangsan");

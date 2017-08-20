@@ -1,0 +1,9 @@
+dependencies {
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-data-rest')
+    compile("mysql:mysql-connector-java:5.1.29")
+    compile("com.alibaba:druid:1.0.10")
+    compile("org.projectlombok:lombok:1.16.18")
+    compile project(":swagger-spring-boot-starer")
+}
