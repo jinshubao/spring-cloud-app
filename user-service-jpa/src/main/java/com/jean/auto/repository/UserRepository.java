@@ -1,4 +1,4 @@
-package com.jean.user.repository;
+package com.jean.auto.repository;
 
 import com.jean.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,0 +1,14 @@
+.DS_Store
+node_modules/
+npm-debug.log
+.editorconfig
+dist/
+.idea
+*.iml
+target
+bower_components
+.tmp
+.mtj.tmp/
+*.pdb
+*.war
+*.ear
