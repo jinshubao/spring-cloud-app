@@ -19,10 +19,6 @@ public class Module extends BaseEntity {
     @OneToMany(mappedBy = "module")
     private List<Api> apis;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "module")
-    private List<TestUnit> testUnits;
-
     public Project getProject() {
         return project;
     }
@@ -39,11 +35,4 @@ public class Module extends BaseEntity {
         this.apis = apis;
     }
 
-    public List<TestUnit> getTestUnits() {
-        return testUnits;
-    }
-
-    public void setTestUnits(List<TestUnit> testUnits) {
-        this.testUnits = testUnits;
-    }
 }

@@ -35,22 +35,10 @@ public class TestService implements ITestService {
 
     @Override
     public ResponseEntity<Map<String, Object>> executeTestCase(TestCase testCase) throws Exception {
-        Api api = testCase.getApi();
         List<Parameter> parameters = testCase.getParameters();
-        List<TestAssert> testAsserts = testCase.getTestAsserts();
-        String url = "";
-        if (!StringUtils.isEmpty(api.getProtocol())) {
-            url = api.getProtocol() + "://";
-        }
-        if (!StringUtils.isEmpty(api.getHost())) {
-            url += api.getHost();
-        }
-        if (api.getPort() != null) {
-            url += ":" + api.getPort();
-        }
-        url += api.getUrl();
+        String url = handleUrl(testCase);
         Map<String, Object> ruiVars = new HashMap<>();
-        HttpMethod httpMethod = HttpMethod.valueOf(api.getMethod().toUpperCase());
+        HttpMethod httpMethod = HttpMethod.valueOf(testCase.getMethod().toUpperCase());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         if (parameters != null) {
@@ -68,7 +56,7 @@ public class TestService implements ITestService {
         String responseHeaders = null;
         String responseBody = null;
         String exceptionMessage = null;
-        boolean assertResult = true;
+        boolean assertResult = false;
         try {
             responseEntity = restTemplate.exchange(url,
                     httpMethod,
@@ -80,22 +68,7 @@ public class TestService implements ITestService {
             Map<String, Object> entityBody = responseEntity.getBody();
             responseBody = JsonUtils.toJson(entityBody);
             responseHeaders = JsonUtils.toJson(responseEntity.getHeaders());
-
-            //创建SpEL表达式的解析器
-            ExpressionParser parser = new SpelExpressionParser();
-            StandardEvaluationContext ctx = new StandardEvaluationContext();
-            ctx.setVariable("headers", headers);
-            ctx.setVariable("response", entityBody);
-            if (testAsserts != null) {
-                for (TestAssert testAssert : testAsserts) {
-                    String expressionString = "#" + testAssert.getAssertKey() + testAssert.getAssertType() + testAssert.getAssertValue();
-                    logger.info("expressionString==>{}", expressionString);
-                    boolean assertRes = parser.parseExpression(expressionString).getValue(ctx, boolean.class);
-                    logger.info("expressionResult==>{}", assertRes);
-                    assertResult &= assertRes;
-                }
-            }
-
+            assertResult = assertResult(responseEntity, testCase.getTestAsserts());
         } catch (RestClientException e) {
             if (e instanceof RestClientResponseException) {
                 RestClientResponseException exception = (RestClientResponseException) e;
@@ -125,14 +98,42 @@ public class TestService implements ITestService {
         return responseEntity;
     }
 
+    private String handleUrl(TestCase testCase) {
+        String url = "";
+        if (!StringUtils.isEmpty(testCase.getProtocol())) {
+            url = testCase.getProtocol() + "://";
+        }
+        if (!StringUtils.isEmpty(testCase.getHost())) {
+            url += testCase.getHost();
+        }
+        if (testCase.getPort() != null) {
+            url += ":" + testCase.getPort();
+        }
+        url += testCase.getUrl();
+        return url;
+    }
+
+    private boolean assertResult(ResponseEntity responseEntity, List<TestAssert> testAsserts) {
+        //创建SpEL表达式的解析器
+        ExpressionParser parser = new SpelExpressionParser();
+        StandardEvaluationContext ctx = new StandardEvaluationContext();
+        ctx.setVariable("headers", responseEntity.getHeaders());
+        ctx.setVariable("response", responseEntity.getBody());
+        boolean assertResult = true;
+        if (testAsserts != null) {
+            for (TestAssert testAssert : testAsserts) {
+                String expressionString = "#" + testAssert.getAssertKey() + testAssert.getAssertType() + testAssert.getAssertValue();
+                logger.info("expressionString==>{}", expressionString);
+                boolean assertRes = parser.parseExpression(expressionString).getValue(ctx, boolean.class);
+                logger.info("expressionResult==>{}", assertRes);
+                assertResult &= assertRes;
+            }
+        }
+        return assertResult;
+    }
+
     @Override
     public ResponseEntity<Map<String, Object>> executeTestUnit(TestUnit testUnit) throws Exception {
-        List<TestCase> testCases = testUnit.getTestCases();
-        Map<String, ResponseEntity<Map<String, Object>>> result = new HashMap<>();
-        for (TestCase testCase : testCases) {
-            ResponseEntity<Map<String, Object>> responseEntity = executeTestCase(testCase);
-            result.put("", responseEntity);
-        }
         //TODO
         return null;
     }

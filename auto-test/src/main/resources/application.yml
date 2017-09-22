@@ -6,7 +6,7 @@ spring:
     name: auto-test
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://10.52.2.99:3306/auto_test
+    url: jdbc:mysql://10.52.2.99:3306/auto_test?characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver

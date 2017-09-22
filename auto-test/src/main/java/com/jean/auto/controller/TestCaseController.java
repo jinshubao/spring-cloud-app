@@ -1,11 +1,11 @@
 package com.jean.auto.controller;
 
 import com.jean.auto.constant.CommonConstant;
-import com.jean.auto.entity.*;
+import com.jean.auto.entity.Parameter;
+import com.jean.auto.entity.TestAssert;
+import com.jean.auto.entity.TestCase;
 import com.jean.auto.model.common.ApiResultListHelper;
 import com.jean.auto.model.common.ApiSimpleResultHelper;
-import com.jean.auto.model.request.AddAssertRequest;
-import com.jean.auto.model.request.AddParameterRequest;
 import com.jean.auto.model.request.AddTestCaseRequest;
 import com.jean.auto.service.IApiService;
 import com.jean.auto.service.ITestUnitService;
@@ -24,47 +24,31 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/cases", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class TestCaseController extends BaseController<TestCase, Long> {
 
-    @Autowired
-    private IApiService apiService;
-
-    @Autowired
-    private ITestUnitService testUnitService;
-
     @PostMapping
     ApiSimpleResultHelper<TestCase> add(@RequestBody @Valid AddTestCaseRequest request) {
-        TestUnit testUnit = testUnitService.findOne(request.getTestUnitId());
-        if (testUnit == null) {
-            return new ApiSimpleResultHelper<>(CommonConstant.ApiResponse.PARAMETER_ERROR, null);
-        }
-        Api api = apiService.findOne(request.getApiId());
-        if (api == null) {
-            return new ApiSimpleResultHelper<>(CommonConstant.ApiResponse.PARAMETER_ERROR, null);
-        }
         TestCase object = new TestCase();
         BeanUtils.copyProperties(request, object);
-        object.setTestUnit(testUnit);
-        object.setApi(api);
         if (request.getParameterList() != null) {
-            object.setParameters(new ArrayList<>());
-            for (AddParameterRequest param : request.getParameterList()) {
+            List<Parameter> parameters = request.getParameterList().stream().map(param -> {
                 Parameter parameter = new Parameter();
                 BeanUtils.copyProperties(param, parameter);
-                object.getParameters().add(parameter);
-            }
+                return parameter;
+            }).collect(Collectors.toList());
+            object.setParameters(parameters);
         }
         if (request.getAssertList() != null) {
-            object.setTestAsserts(new ArrayList<>());
-            for (AddAssertRequest assertRequest : request.getAssertList()) {
+            List<TestAssert> testAsserts = request.getAssertList().stream().map(assertRequest -> {
                 TestAssert testAssert = new TestAssert();
                 BeanUtils.copyProperties(assertRequest, testAssert);
-                object.getTestAsserts().add(testAssert);
-                testAssert.setTestCase(object);
-            }
+                return testAssert;
+            }).collect(Collectors.toList());
+            object.setTestAsserts(testAsserts);
         }
         return super.add(object);
     }
@@ -76,9 +60,6 @@ public class TestCaseController extends BaseController<TestCase, Long> {
 
     @GetMapping("/list")
     ApiResultListHelper<TestCase> list(
-            @RequestParam(value = "project_id", required = false) Integer projectId,
-            @RequestParam(value = "module_id", required = false) Integer moduleId,
-            @RequestParam(value = "test_unit_id", required = false) Integer testUnitId,
             @RequestParam(value = "keyword", required = false) String keyword,
             @Min(value = 1L, message = CommonConstant.RE_ERROR__PAGE_NUMBER_LESS_THAN_MINIMUM_VALUE)
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
@@ -87,26 +68,13 @@ public class TestCaseController extends BaseController<TestCase, Long> {
             @RequestParam(value = "size", required = false, defaultValue = CommonConstant.DEFAULT_PAGE_SIZE) Integer size) {
         PageRequest pageRequest = new PageRequest(page - 1, size);
         Specification<TestCase> specification = (root, query, builder) -> {
-            List<Predicate> predicateAnds = new ArrayList<>();
             List<Predicate> predicateLikes = new ArrayList<>();
-            if (testUnitId != null) {
-                predicateAnds.add(builder.equal(root.get("testUnit").get("id"), testUnitId));
-            }
-            if (moduleId != null) {
-                predicateAnds.add(builder.equal(root.get("testUnit").get("module").get("id"), moduleId));
-            }
-            if (projectId != null) {
-                predicateAnds.add(builder.equal(root.get("testUnit").get("module").get("project").get("id"), projectId));
-            }
             if (!StringUtils.isEmpty(keyword)) {
                 //path转化
                 predicateLikes.add(builder.like(root.get("name"), "%" + keyword + "%"));
                 predicateLikes.add(builder.like(root.get("description"), "%" + keyword + "%"));
             }
             List<Predicate> where = new ArrayList<>();
-            if (!predicateAnds.isEmpty()) {
-                where.add(builder.or(predicateAnds.toArray(new Predicate[predicateAnds.size()])));
-            }
             if (!predicateLikes.isEmpty()) {
                 where.add(builder.or(predicateLikes.toArray(new Predicate[predicateLikes.size()])));
             }
