@@ -117,5 +117,6 @@ public class SwaggerAutoConfiguration {
                 ui.isJsonEditor(),                  // enableJsonEditor      => true | false
                 ui.isShowRequestHeaders(),          // showRequestHeaders    => true | false
                 ui.getRequestTimeout());            // requestTimeout => in milliseconds, defaults to null (uses jquery xh timeout)
+
     }
 }

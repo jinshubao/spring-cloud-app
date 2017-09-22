@@ -13,7 +13,7 @@ public class CommonConstant {
 
     public enum ApiResponse {
 
-        SUCCESS("0000", "OK"),
+        SUCCESS("0000", "ok"),
         PARAMETER_ERROR("9000", "参数错误"),
         SYSTEM_ERROR("9999", "系统忙，请稍后重试");
 

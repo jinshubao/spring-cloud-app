@@ -1,13 +1,15 @@
 package com.jean.auto.service;
 
 import com.jean.auto.constant.CommonConstant;
-import com.jean.auto.entity.Api;
-import com.jean.auto.entity.Parameter;
-import com.jean.auto.entity.TestCase;
-import com.jean.auto.entity.TestResult;
+import com.jean.auto.entity.*;
 import com.jean.auto.util.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -23,15 +25,19 @@ import java.util.Map;
 @Service
 public class TestService implements ITestService {
 
+    private Logger logger = LoggerFactory.getLogger(TestService.class);
+
     @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
     private ITestResultService testResultService;
 
-
     @Override
-    public ResponseEntity<Map<String, Object>> executeTest(TestCase testCase, Api api, List<Parameter> parameters) throws Exception {
+    public ResponseEntity<Map<String, Object>> executeTestCase(TestCase testCase) throws Exception {
+        Api api = testCase.getApi();
+        List<Parameter> parameters = testCase.getParameters();
+        List<TestAssert> testAsserts = testCase.getTestAsserts();
         String url = "";
         if (!StringUtils.isEmpty(api.getProtocol())) {
             url = api.getProtocol() + "://";
@@ -48,13 +54,13 @@ public class TestService implements ITestService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         if (parameters != null) {
-            for (Parameter parameter : parameters) {
+            parameters.forEach(parameter -> {
                 if (CommonConstant.ParameterType.HEADER.getValue().equals(parameter.getParameterType())) {
                     headers.add(parameter.getParameterKey(), parameter.getParameterValue());
                 } else if (CommonConstant.ParameterType.BODY.getValue().equals(parameter.getParameterType())) {
                     ruiVars.put(parameter.getParameterKey(), parameter.getParameterValue());
                 }
-            }
+            });
         }
         HttpEntity<Map> httpEntity = new HttpEntity<>(ruiVars, headers);
         ResponseEntity<Map<String, Object>> responseEntity = null;
@@ -62,6 +68,7 @@ public class TestService implements ITestService {
         String responseHeaders = null;
         String responseBody = null;
         String exceptionMessage = null;
+        boolean assertResult = true;
         try {
             responseEntity = restTemplate.exchange(url,
                     httpMethod,
@@ -70,8 +77,25 @@ public class TestService implements ITestService {
                     },
                     ruiVars);
             statusCode = responseEntity.getStatusCodeValue();
-            responseBody = JsonUtils.toJson(responseEntity.getBody());
+            Map<String, Object> entityBody = responseEntity.getBody();
+            responseBody = JsonUtils.toJson(entityBody);
             responseHeaders = JsonUtils.toJson(responseEntity.getHeaders());
+
+            //创建SpEL表达式的解析器
+            ExpressionParser parser = new SpelExpressionParser();
+            StandardEvaluationContext ctx = new StandardEvaluationContext();
+            ctx.setVariable("headers", headers);
+            ctx.setVariable("response", entityBody);
+            if (testAsserts != null) {
+                for (TestAssert testAssert : testAsserts) {
+                    String expressionString = "#" + testAssert.getAssertKey() + testAssert.getAssertType() + testAssert.getAssertValue();
+                    logger.info("expressionString==>{}", expressionString);
+                    boolean assertRes = parser.parseExpression(expressionString).getValue(ctx, boolean.class);
+                    logger.info("expressionResult==>{}", assertRes);
+                    assertResult &= assertRes;
+                }
+            }
+
         } catch (RestClientException e) {
             if (e instanceof RestClientResponseException) {
                 RestClientResponseException exception = (RestClientResponseException) e;
@@ -80,24 +104,36 @@ public class TestService implements ITestService {
                 responseHeaders = JsonUtils.toJson(exception.getResponseHeaders());
             }
             exceptionMessage = e.getMessage();
+            throw e;
         } finally {
             TestResult result = new TestResult();
-            result.setApi(api);
             result.setTestCase(testCase);
             result.setCreatedTime(new Date());
             result.setModifiedTime(result.getCreatedTime());
             result.setEnabled(true);
             result.setName(testCase.getName());
             result.setDescription(testCase.getName());
-            result.setRemark(testCase.getName());
             result.setParameter(JsonUtils.toJson(ruiVars));
             result.setUrl(url);
             result.setStatusCode(statusCode);
             result.setResponseBody(responseBody);
             result.setResponseHeader(responseHeaders);
             result.setException(exceptionMessage);
+            result.setAssertResult(assertResult);
             testResultService.save(result);
         }
         return responseEntity;
+    }
+
+    @Override
+    public ResponseEntity<Map<String, Object>> executeTestUnit(TestUnit testUnit) throws Exception {
+        List<TestCase> testCases = testUnit.getTestCases();
+        Map<String, ResponseEntity<Map<String, Object>>> result = new HashMap<>();
+        for (TestCase testCase : testCases) {
+            ResponseEntity<Map<String, Object>> responseEntity = executeTestCase(testCase);
+            result.put("", responseEntity);
+        }
+        //TODO
+        return null;
     }
 }

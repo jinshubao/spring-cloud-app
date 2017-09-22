@@ -1,11 +1,10 @@
 package com.jean.auto.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @DynamicUpdate
@@ -16,6 +15,14 @@ public class Module extends BaseEntity {
     @JoinColumn(name = "project_id")
     private Project project;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "module")
+    private List<Api> apis;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "module")
+    private List<TestUnit> testUnits;
+
     public Project getProject() {
         return project;
     }
@@ -24,4 +31,19 @@ public class Module extends BaseEntity {
         this.project = project;
     }
 
+    public List<Api> getApis() {
+        return apis;
+    }
+
+    public void setApis(List<Api> apis) {
+        this.apis = apis;
+    }
+
+    public List<TestUnit> getTestUnits() {
+        return testUnits;
+    }
+
+    public void setTestUnits(List<TestUnit> testUnits) {
+        this.testUnits = testUnits;
+    }
 }

@@ -22,9 +22,6 @@ public abstract class BaseEntity extends AbstractPersistable<Long> {
     protected Date modifiedTime;
 
     @Column(length = 500)
-    protected String remark;
-
-    @Column(length = 500)
     protected String description;
 
     protected boolean enabled;
@@ -47,14 +44,6 @@ public abstract class BaseEntity extends AbstractPersistable<Long> {
 
     public void setModifiedTime(Date modifiedTime) {
         this.modifiedTime = modifiedTime;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
     }
 
     public String getDescription() {

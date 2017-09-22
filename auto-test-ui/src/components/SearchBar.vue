@@ -11,20 +11,15 @@
     </el-row>
 </template>
 <script>
-    import ElRow from "element-ui/packages/row/src/row";
-    import ElCol from "element-ui/packages/col/src/col";
     export default {
-        components: {
-            ElCol,
-            ElRow
-        },
         data() {
             return {
+                select: '',
                 keyword: ''
             }
         },
         methods: {
-            searchByKeyword(keyword){
+            searchByKeyword(keyword) {
                 this.$emit('search', keyword)
             }
         },
@@ -37,9 +32,4 @@
         padding-top: 10px;
         padding-bottom: 10px;
     }
-
-    .toolbar .el-col{
-        padding-right: 0;
-    }
-
 </style>

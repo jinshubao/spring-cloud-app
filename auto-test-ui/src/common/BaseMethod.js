@@ -1,87 +1,106 @@
 import util from './js/util'
 import {
-    RESULT_DATA,
-    LIST_LOADING,
-    ADD_DIALOG_OPEN_FLAG,
-    BEFORE_ADD_DIALOG_OPEN,
-    EDIT_DIALOG_OPEN_FLAG,
     ADD_BUTTON_LOADING,
+    ADD_DIALOG_OPEN_FLAG,
+    AFTER_ADD_SUBMIT,
+    BEFORE_ADD_DIALOG_OPEN,
+    COMMON_PARAMS,
+    CUSTOMER_PARAMS,
     EDIT_BUTTON_LOADING,
-    ADD_FORM_DATA,
-    EDIT_FORM_DATA,
-    QUERY_PARAMS,
-    ADD_FORM_RULES,
-    EDIT_FORM_RULES
+    EDIT_DIALOG_OPEN_FLAG,
+    LIST_LOADING,
+    RESULT_DATA,
 } from './constant'
 
 export default {
 
     handleSizeChange: function (val) {
-        this[QUERY_PARAMS].size = val;
+        this[COMMON_PARAMS].size = val;
         this.loadData();
     },
     handleCurrentChange: function (val) {
-        this[QUERY_PARAMS].page = val;
+        this[COMMON_PARAMS].page = val;
         this.loadData();
     },
     loadData: function () {
         this[LIST_LOADING] = true;
-        this.load(this[QUERY_PARAMS]).then((res) => {
-            this[RESULT_DATA] = res.data;
+        let cus = Object.assign({}, this[CUSTOMER_PARAMS]);
+        let comm = Object.assign({}, this[COMMON_PARAMS]);
+        let para = Object.assign(cus, comm);
+        console.info('COMMON_PARAMS', this[COMMON_PARAMS]);
+        console.info('CUSTOMER_PARAMS', this[CUSTOMER_PARAMS]);
+        this.load(para).then((res) => {
             this[LIST_LOADING] = false;
+            if (res.data && res.data.code === '0000') {
+                this[RESULT_DATA] = res.data;
+            }
+            console.log("res.data", res.data);
+        }, (err) => {
+            console.error("error", err)
+        }).catch((err) => {
+            console.error("catch", err)
         })
     },
     handleSearch: function (kw) {
-        this[QUERY_PARAMS].keyword = kw;
+        this[COMMON_PARAMS].keyword = kw;
         this.loadData();
     },
     handleAdd: function () {
         this[ADD_DIALOG_OPEN_FLAG] = true;
-        this[ADD_FORM_DATA] = {};
-        if(this[BEFORE_ADD_DIALOG_OPEN]){
+        if (this[BEFORE_ADD_DIALOG_OPEN]) {
             this[BEFORE_ADD_DIALOG_OPEN]()
         }
+    },
+    handleAddCancel: function () {
+        this[ADD_DIALOG_OPEN_FLAG] = false;
     },
 
     addSubmit: function (params) {
         this[ADD_BUTTON_LOADING] = true;
         let para = Object.assign({}, params);
-        console.log(params)
+        console.log("add params:", para);
         this.add(para).then((res) => {
             this[ADD_BUTTON_LOADING] = false;
-            this.$message({
-                message: '提交成功',
-                type: 'success'
-            });
+            if (res.data.code === '0000') {
+                this.$message({
+                    message: '提交成功',
+                    type: 'success'
+                });
+                this.loadData();
+            } else {
+                this.$message.error(`提交失败, ${res.data.desc}`);
+            }
             this[ADD_DIALOG_OPEN_FLAG] = false;
-            this.loadData();
-        },(err) => {
+            this[AFTER_ADD_SUBMIT]();
+        }, (err) => {
             this[ADD_BUTTON_LOADING] = false;
-            console.log(err) 
+            this[ADD_DIALOG_OPEN_FLAG] = false;
+            this.$message.error(`提交失败, ${err}`);
+            this[AFTER_ADD_SUBMIT]();
+            console.log(err)
+        }).catch((err) => {
+            this[AFTER_ADD_SUBMIT]();
         });
     },
 
     handleEdit: function (index, row) {
         this[EDIT_DIALOG_OPEN_FLAG] = true;
-        this[EDIT_FORM_DATA] = Object.assign({}, row);
+    },
+    handleEditCancel: function () {
+        this[EDIT_DIALOG_OPEN_FLAG] = false;
     },
 
-    editSubmit: function () {
-        this.$refs[EDIT_FORM_DATA].validate((valid) => {
-            if (valid) {
-                this[EDIT_BUTTON_LOADING] = true;
-                let para = Object.assign({}, this[EDIT_FORM_DATA]);
-                this.modify(para).then((res) => {
-                    this[EDIT_BUTTON_LOADING] = false;
-                    this.$message({
-                        message: '提交成功',
-                        type: 'success'
-                    });
-                    this.$refs[EDIT_FORM_DATA].resetFields();
-                    this[EDIT_DIALOG_OPEN_FLAG] = false;
-                    this.loadData();
-                });
-            }
+    editSubmit: function (params) {
+        this[EDIT_BUTTON_LOADING] = true;
+        let para = Object.assign({}, params);
+        this.modify(para).then((res) => {
+            this[EDIT_BUTTON_LOADING] = false;
+            this.$message({
+                message: '提交成功',
+                type: 'success'
+            });
+            this[EDIT_DIALOG_OPEN_FLAG] = false;
+            this.loadData();
         });
     },
     handleDel: function (index, row) {
@@ -102,5 +121,9 @@ export default {
     },
     formatDate: function (row, column) {
         return util.formatDate.format(new Date(row[column.property]), 'yyyy-MM-dd hh:mm:ss')
+    },
+    [BEFORE_ADD_DIALOG_OPEN]: function () {
+    },
+    [AFTER_ADD_SUBMIT]: function () {
     }
 }

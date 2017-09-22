@@ -49,15 +49,15 @@ swagger:
       name: test
       url: http://www.test.com
     terms-of-service-url: http://www.test.com
-    title: User接口
+    title: 接口
     version: 1.0
     contact:
-      email: zhangsan@qq.com
-      name: zhangsan
-      url: http://www.test.com
+      email: jinshubao123@126.com
+      name: jinshubao
+      url:
   docket:
     enable: true
-    groupName: USER
+    groupName: test
     pathPrefix: /
   responseMessage:
     - code: 200

@@ -1,8 +1,8 @@
 let SIGN_REGEXP = /([yMdhsm])(\1*)/g;
 let DEFAULT_PATTERN = 'yyyy-MM-dd';
 function padding(s, len) {
-    let len = len - (s + '').length;
-    for (let i = 0; i < len; i++) { s = '0' + s; }
+    let lens = len - (s + '').length;
+    for (let i = 0; i < lens; i++) { s = '0' + s; }
     return s;
 };
 

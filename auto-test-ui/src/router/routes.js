@@ -4,45 +4,25 @@ import Error403 from "../views/error/403.vue";
 import Error404 from "../views/error/404.vue";
 import Error500 from "../views/error/500.vue";
 
-import Project from "../views/api/Project.vue";
-import Module from "../views/api/Module.vue";
-import ApiModule from "../views/api/ApiModule.vue";
-import TestModule from "../views/test/TestModule.vue";
+import ApiList from "../views/api/ApiList.vue";
+import TestCaseList from "../views/api/TestCaseList.vue"
+import echarts from "../views/charts/echarts.vue"
 
 let routes = [
     {
         path: '/api',
-        component: ApiModule,
-        name: '接口管理',
-        children: [
-            {
-                path: 'project',
-                component: Project,
-                name: '项目'
-            },
-            {
-                path: 'module',
-                component: Module,
-                name: '模块'
-            }
-        ]
+        component: ApiList,
+        name: '接口列表'
     },
     {
         path: '/test',
-        component: TestModule,
-        name: '测试管理',
-        children: [
-            {
-                path: 'case',
-                component: Module,
-                name: '测试用例'
-            },
-            {
-                path: 'unit',
-                component: Module,
-                name: '单元测试'
-            }
-        ]
+        component: TestCaseList,
+        name: '测试用例'
+    },
+    {
+        path: '/report',
+        component: echarts,
+        name: '测试报告'
     },
     {
         path: '/login',

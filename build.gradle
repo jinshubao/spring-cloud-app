@@ -24,6 +24,7 @@ allprojects {
     [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
     repositories {
+        
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     }
 
@@ -41,6 +42,7 @@ subprojects {
     ext {
         brave_mysql = "4.3.4"
         mysql = "5.1.41"
+
         swagger = "2.7.0"
     }
 

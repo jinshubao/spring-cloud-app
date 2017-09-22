@@ -5,7 +5,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -13,11 +13,7 @@ import javax.persistence.Table;
 @Table(name = "t_parameter")
 public class Parameter extends BaseEntity {
 
-    @OneToOne
-    @JoinColumn(name = "api_id")
-    private Api api;
-
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "test_case_id")
     private TestCase testCase;
 
@@ -30,14 +26,6 @@ public class Parameter extends BaseEntity {
     private Boolean required;
 
     private String defaultValue;
-
-    public Api getApi() {
-        return api;
-    }
-
-    public void setApi(Api api) {
-        this.api = api;
-    }
 
     public String getParameterKey() {
         return parameterKey;
@@ -63,14 +51,6 @@ public class Parameter extends BaseEntity {
         this.parameterType = parameterType;
     }
 
-    public TestCase getTestCase() {
-        return testCase;
-    }
-
-    public void setTestCase(TestCase testCase) {
-        this.testCase = testCase;
-    }
-
     public Boolean getRequired() {
         return required;
     }
@@ -85,5 +65,13 @@ public class Parameter extends BaseEntity {
 
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
+    }
+
+    public TestCase getTestCase() {
+        return testCase;
+    }
+
+    public void setTestCase(TestCase testCase) {
+        this.testCase = testCase;
     }
 }

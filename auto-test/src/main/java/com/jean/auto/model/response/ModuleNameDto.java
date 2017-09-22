@@ -1,10 +1,10 @@
-package com.jean.auto.model;
+package com.jean.auto.model.response;
 
-public class ProjectNameModel {
+public class ModuleNameDto {
     private Long id;
     private String name;
 
-    public ProjectNameModel(Long id, String name) {
+    public ModuleNameDto(Long id, String name) {
         this.id = id;
         this.name = name;
     }

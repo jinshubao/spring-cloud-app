@@ -14,10 +14,6 @@ public class TestResult extends BaseEntity {
     @JoinColumn(name = "test_case_id")
     private TestCase testCase;
 
-    @OneToOne
-    @JoinColumn(name = "api_id")
-    private Api api;
-
     @Column(columnDefinition = "BLOB")
     private String url;
 
@@ -35,20 +31,14 @@ public class TestResult extends BaseEntity {
     @Column(columnDefinition = "BLOB")
     private String exception;
 
+    private Boolean assertResult;
+
     public TestCase getTestCase() {
         return testCase;
     }
 
     public void setTestCase(TestCase testCase) {
         this.testCase = testCase;
-    }
-
-    public Api getApi() {
-        return api;
-    }
-
-    public void setApi(Api api) {
-        this.api = api;
     }
 
     public String getUrl() {
@@ -97,5 +87,13 @@ public class TestResult extends BaseEntity {
 
     public void setParameter(String parameter) {
         this.parameter = parameter;
+    }
+
+    public Boolean getAssertResult() {
+        return assertResult;
+    }
+
+    public void setAssertResult(Boolean assertResult) {
+        this.assertResult = assertResult;
     }
 }

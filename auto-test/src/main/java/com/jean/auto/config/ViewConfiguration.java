@@ -9,6 +9,6 @@ public class ViewConfiguration extends WebMvcConfigurerAdapter {
     //快速解决页面转向问题
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addRedirectViewController("/", "/swagger-ui.html");
+        registry.addRedirectViewController("/", "/doc.html");
     }
 }

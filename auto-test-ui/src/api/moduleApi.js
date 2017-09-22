@@ -14,5 +14,11 @@ export default {
     },
     load: (params) => {
         return axios.get(`${base}`, {params: params});
+    },
+    loadById: (params) => {
+        return axios.get(`${base}/apis`, {params: params});
+    },
+    names: (params) => {
+        return axios.get(`${base}/names`, {params: params});
     }
 }

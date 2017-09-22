@@ -5,6 +5,7 @@ import com.jean.auto.model.common.ApiSimpleResultHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,7 +29,6 @@ public class GlobalExceptionHelper {
     @ResponseBody
     public ApiSimpleResultHelper<Object> exception(Exception exception, HttpServletResponse response) {
         logger.error("出错了", exception);
-        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         return new ApiSimpleResultHelper<>(CommonConstant.ApiResponse.SYSTEM_ERROR, exception.getMessage());
     }
@@ -40,17 +40,20 @@ public class GlobalExceptionHelper {
         return new ApiSimpleResultHelper<>(CommonConstant.ApiResponse.SYSTEM_ERROR, exception.getMessage());
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler(value = {ConstraintViolationException.class, MethodArgumentNotValidException.class})
     @ResponseBody
-    public ApiSimpleResultHelper<Object> constraintViolationException(ConstraintViolationException exception, HttpServletResponse response) {
+    public ApiSimpleResultHelper<Object> constraintViolationException(Exception exception, HttpServletResponse response) {
         List<String> message = new ArrayList<>();
-        Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
-        if (constraintViolations != null) {
-            for (ConstraintViolation violation : constraintViolations) {
-                message.add(violation.getMessage());
+        if (exception instanceof ConstraintViolationException) {
+            Set<ConstraintViolation<?>> constraintViolations = ((ConstraintViolationException) exception).getConstraintViolations();
+            if (constraintViolations != null) {
+                for (ConstraintViolation violation : constraintViolations) {
+                    message.add(violation.getMessage());
+                }
             }
+        } else if (exception instanceof MethodArgumentNotValidException) {
+            //TODO
         }
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         return new ApiSimpleResultHelper<>(CommonConstant.ApiResponse.PARAMETER_ERROR, message);
 

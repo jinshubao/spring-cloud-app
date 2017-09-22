@@ -27,7 +27,8 @@
             <el-table-column label="操作" width="150">
                 <template scope="scope">
                     <el-button size="small" @click="handleEdit(scope.$index, scope.row)" icon="edit"></el-button>
-                    <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)" icon="delete"></el-button>
+                    <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)"
+                               icon="delete"></el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -47,7 +48,8 @@
             <el-form :model="formData" :rules="formRules" label-width="80px" ref="formData">
                 <el-form-item label="所属项目" prop="project">
                     <el-select v-model="formData.projectId" placeholder="请选择项目">
-                        <el-option v-for="item in projects" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                        <el-option v-for="item in projects" :key="item.id" :label="item.name"
+                                   :value="item.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="模块名称" prop="name">
@@ -122,13 +124,13 @@
         data() {
             return {
                 ...BaseData,
-                formData:{
+                formData: {
                     name: '',
                     description: '',
                     remark: '',
                     projectId: ''
                 },
-                formRules:{
+                formRules: {
                     projectId: [
                         {required: true, message: '请选择项目'}
                     ],
@@ -145,7 +147,7 @@
         methods: {
             ...moduleApi,
             ...BaseMethod,
-            customAdd:function(){
+            customAdd: function () {
                 this.$refs.formData.validate((valid) => {
                     if (valid) {
                         this.addSubmit(this.formData)
@@ -157,9 +159,18 @@
                     this.projects = res.data.data
                     console.info(this.projects);
                 })
+            },
+            loadApi: function () {
+                this[LIST_LOADING] = true;
+                this.load(this[QUERY_PARAMS]).then((res) => {
+                    this[RESULT_DATA] = res.data;
+                    this[LIST_LOADING] = false;
+                })
             }
         },
         mounted() {
+            let moduleId = this.$route.params.moduleId;
+            moduleApi.loadById(moduleId);
             this.loadData();
         }
     }
