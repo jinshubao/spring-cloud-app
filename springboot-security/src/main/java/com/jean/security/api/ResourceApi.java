@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * @author jinshubao
+ */
 @RestController
 @RequestMapping("/resource")
 public class ResourceApi {

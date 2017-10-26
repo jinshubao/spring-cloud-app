@@ -18,4 +18,8 @@ export default {
     modify: (params) => {
         return axios.put(`${base}`, params);
     },
+
+    apiNames:(params)=>{
+        return axios.get(`${base}/names`, {params: params});
+    }
 }

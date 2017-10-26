@@ -3,8 +3,13 @@ package com.jean.swagger.config;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.jean.swagger.properties.DocketProperties;
 import com.jean.swagger.properties.SwaggerProperties;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -25,21 +30,18 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.UiConfiguration;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-@EnableConfigurationProperties(value = {SwaggerProperties.class})
-@ConditionalOnProperty(name = "swagger.enable")
+/**
+ * @author jinshubao
+ */
 @EnableSwagger2
-public class SwaggerAutoConfiguration {
+@EnableConfigurationProperties(value = {SwaggerProperties.class})
+@ConditionalOnProperty(name = "swagger.enable", matchIfMissing = true)
+public class SwaggerAutoConfiguration implements BeanFactoryAware {
 
-    private final SwaggerProperties properties;
-
-    @Autowired
-    public SwaggerAutoConfiguration(SwaggerProperties properties) {
-        this.properties = properties;
-    }
+    private BeanFactory beanFactory;
 
     @Bean
     @ConditionalOnMissingBean(value = {ResponseMessageConfiguration.class})
@@ -48,51 +50,56 @@ public class SwaggerAutoConfiguration {
     }
 
     @Bean
-    public Docket docket(ResponseMessageConfiguration responseMessage) {
-        SwaggerProperties.DocketProperties properties = this.properties.getDocket();
-        Docket docket = new Docket(DocumentationType.SWAGGER_2);
-        docket = docket.apiInfo(apiInfo())
-                .enable(properties.isEnable())
-                .groupName(properties.getGroupName())
-                .select()
-                .apis(apis(properties))
-                .paths(paths(properties))
-                .build()
-                .pathMapping(properties.getPathPrefix())
+    @ConditionalOnMissingBean
+    public Collection<Docket> docket(ResponseMessageConfiguration responseMessage, SwaggerProperties properties) {
+        ConfigurableBeanFactory configurableBeanFactory = (ConfigurableBeanFactory) beanFactory;
+
+        Map<String, DocketProperties> dockets =  properties.getDockets();
+        List<Docket> docketList = new ArrayList<>();
+        for (DocketProperties docketProperties : dockets.values()) {
+            Docket docket = new Docket(DocumentationType.SWAGGER_2);
+            docket = docket.apiInfo(apiInfo( properties.getApiInfo()))
+                    .enable(docketProperties.isEnable())
+                    .groupName(docketProperties.getGroupName())
+                    .select()
+                    .apis(apis(docketProperties.getApiPackage()))
+                    .paths(paths(docketProperties.getPaths()))
+                    .build()
+                    .pathMapping(docketProperties.getPathPrefix())
 //                .directModelSubstitute(LocalDate.class, String.class)
-                .genericModelSubstitutes(DeferredResult.class)
-                .useDefaultResponseMessages(false)
-                .host(properties.getHost())
-                .consumes(properties.getConsumes())
-                .produces(properties.getProduces())
-                .protocols(properties.getProtocols());
-        List<ResponseMessage> messages = responseMessage.messages();
-        if (!messages.isEmpty()) {
-            for (RequestMethod method : RequestMethod.values()) {
-                docket = docket.globalResponseMessage(method, messages);
+                    .genericModelSubstitutes(DeferredResult.class)
+                    .useDefaultResponseMessages(false)
+                    .host(docketProperties.getHost())
+                    .consumes(docketProperties.getConsumes())
+                    .produces(docketProperties.getProduces())
+                    .protocols(docketProperties.getProtocols());
+            List<ResponseMessage> messages = responseMessage.messages();
+            if (!messages.isEmpty()) {
+                for (RequestMethod method : RequestMethod.values()) {
+                    docket = docket.globalResponseMessage(method, messages);
+                }
             }
+            configurableBeanFactory.registerSingleton(docket.getGroupName(), docket);
+            docketList.add(docket);
         }
-        return docket;
+        return docketList;
     }
 
-    private Predicate<RequestHandler> apis(SwaggerProperties.DocketProperties properties) {
-        if (StringUtils.hasText(properties.getApiPackage())) {
-            return RequestHandlerSelectors.basePackage(properties.getApiPackage().trim());
+    private Predicate<RequestHandler> apis(String apiPackage) {
+        if (StringUtils.hasText(apiPackage)) {
+            return RequestHandlerSelectors.basePackage(apiPackage.trim());
         }
         return ApiSelector.DEFAULT.getRequestHandlerSelector();
     }
 
-    private Predicate<String> paths(SwaggerProperties.DocketProperties properties) {
-        if (properties.getPaths() != null && !properties.getPaths().isEmpty()) {
-            List<String> list = new ArrayList<>();
-            list.addAll(properties.getPaths());
-            return Predicates.or(list.stream().map(PathSelectors::regex).collect(Collectors.toList()));
+    private Predicate<String> paths(Set<String> paths) {
+        if (paths != null && !paths.isEmpty()) {
+            return Predicates.or(paths.stream().map(PathSelectors::regex).collect(Collectors.toSet()));
         }
         return ApiSelector.DEFAULT.getPathSelector();
     }
 
-    private ApiInfo apiInfo() {
-        SwaggerProperties.ApiInfoProperties apiInfo = this.properties.getApiInfo();
+    private ApiInfo apiInfo(SwaggerProperties.ApiInfoProperties apiInfo) {
         Contact contact = new Contact(apiInfo.getContact().getName(), apiInfo.getContact().getUrl(), apiInfo.getContact().getEmail());
         return new ApiInfoBuilder()
                 .title(apiInfo.getTitle())
@@ -106,8 +113,8 @@ public class SwaggerAutoConfiguration {
     }
 
     @Bean
-    UiConfiguration uiConfig() {
-        SwaggerProperties.UiConfigurationProperties ui = this.properties.getUi();
+    UiConfiguration uiConfig(SwaggerProperties properties) {
+        SwaggerProperties.UiConfigurationProperties ui = properties.getUi();
         return new UiConfiguration(
                 ui.getValidatorUrl(),               // url
                 ui.getDocExpansion(),               // docExpansion          => none | list
@@ -118,5 +125,10 @@ public class SwaggerAutoConfiguration {
                 ui.isShowRequestHeaders(),          // showRequestHeaders    => true | false
                 ui.getRequestTimeout());            // requestTimeout => in milliseconds, defaults to null (uses jquery xh timeout)
 
+    }
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
     }
 }

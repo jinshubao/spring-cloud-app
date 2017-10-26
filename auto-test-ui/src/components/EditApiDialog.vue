@@ -1,8 +1,8 @@
 <template>
-    <el-dialog title="修改接口" v-model="dialogOpenFlag" :close-on-click-modal="false">
+    <el-dialog title="修改接口" :visible.sync="dialogVisible" :close-on-click-modal="false">
         <el-form :model="formData" label-width="80px" :rules="formRules" ref="formData">
             <el-form-item label="模块" prop="projectModule">
-                <el-cascader :options="projectNames" v-model="formData.projectModule" disabled >
+                <el-cascader :options="options" :props="props" v-model="formData.projectModule" disabled >
                 </el-cascader>
             </el-form-item>
             <el-form-item label="接口名称" prop="name">
@@ -35,23 +35,31 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click.native="cancel">取消</el-button>
-            <el-button type="primary" @click.native="addSubmit">提交</el-button>
+            <el-button type="primary" @click.native="submit" :loading="submitButtonLoading">提交</el-button>
         </div>
     </el-dialog>
 </template>
 
 <script>
+    import projectApi from '../api/projectApi';
+    import ApiApi from '../api/ApiApi';
+
     export default {
         props: {
-            dialogOpenFlag: Boolean,
-            submitButtonLoading: Boolean,
-            projectNames: Array,
+            visible: Boolean,
             formData: Object
         },
         data() {
             return {
+                submitButtonLoading: false,
                 methods: ["GET", "POST", "DELETE", "PUT", "PATCH", "OPTION"],
                 protocols: ["http", "https", "file"],
+                options:[],
+                props: {
+                    label: 'name',
+                    value: 'id',
+                    children: 'modules'
+                },
                 formRules: {
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'},
@@ -76,15 +84,50 @@
             cancel: function () {
                 this.$emit('cancel');
             },
-            addSubmit: function () {
-                this.$refs.formData.validate((valid) => {
-                    if (valid) {
-                        this.formData.moduleId = this.formData.projectModule[1];
-                        this.$emit('submit', Object.assign({}, this.formData));
+            submit () {
+                this.submitButtonLoading = true;
+                let param = Object.assign({}, this.formData);
+                ApiApi.modify(param).then((res) => {
+                    this.submitButtonLoading = false;
+                    if (res.data.code === '0000') {
                         this.$refs.formData.resetFields();
+                        this.$emit('afterSubmit');
+                        this.$message({
+                            message: '提交成功',
+                            type: 'success'
+                        });
+                    } else {
+                        this.$message.error(`提交失败, ${res.data.desc}`);
                     }
+                }, (err) => {
+                    this.submitButtonLoading = false;
+                    this.$message.error(`提交失败, ${err}`);
+                    console.log(err)
+                }).catch((err) => {
+                    this.submitButtonLoading = false;
+                    console.log(err)
                 });
             }
+        },
+        computed: {
+            dialogVisible: {
+                set: function (value) {
+                    if (!value) {
+                        this.cancel()
+                    }
+                },
+                get: function () {
+                    return this.visible
+                }
+            }
+        },
+        mounted() {
+            projectApi.allProjectNames().then((res) => {
+                this.options = res.data.data;
+                console.log(res.data);
+            }, (err) => {
+
+            });
         }
     }
 

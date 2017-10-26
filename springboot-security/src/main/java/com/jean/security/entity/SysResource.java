@@ -4,6 +4,9 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
+/**
+ * @author jinshubao
+ */
 @Entity
 @Table(name = "sys_resource")
 @DynamicUpdate
@@ -39,5 +42,19 @@ public class SysResource extends BaseEntity {
 
     public void setMethod(String method) {
         this.method = method;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (method != null ? method.hashCode() : 0);
+        return result;
     }
 }

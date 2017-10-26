@@ -1,3 +1,16 @@
+ext {
+    queryDslVersion = '4.1.4'
+
+    generatedSourceDir = 'src/main/generated'
+}
+
+
+idea {
+    module {
+        sourceDirs += file(generatedSourceDir)
+    }
+}
+
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-web"
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -5,4 +18,11 @@ dependencies {
     compile("com.alibaba:druid:1.0.10")
 //    compile("org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.1")
     compile project(":swagger-spring-boot-starer")
+    compile "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    compile "com.querydsl:querydsl-apt:${queryDslVersion}"
+}
+
+compileJava {
+    options.compilerArgs += ['-s', generatedSourceDir,
+                             '-processor', 'com.querydsl.apt.jpa.JPAAnnotationProcessor']
 }

@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface IProjectService extends IBaseService<Project, Long> {
 
-    List<ProjectResponse> findAllProjectNames();
+    List<ProjectResponse> findAllNames();
 
 }

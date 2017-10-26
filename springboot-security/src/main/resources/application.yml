@@ -6,7 +6,7 @@ spring:
     name: springboot-security
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/sys_pro
+    url: jdbc:mysql://10.52.2.66:3306/sys_pro
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
@@ -41,7 +41,7 @@ spring:
 #    properties:
 #      hibernate.format_sql: true
   redis:
-    host: localhost
+    host: 10.52.2.66
     port: 6379
     database: 0
 
@@ -54,13 +54,13 @@ info:
 swagger:
   enable: true
   api-info:
-    description: User接口
+    description: 权限接口
     license:
       name: test
       url: http://www.test.com
     terms-of-service-url: http://www.test.com
-    title: User接口
-    version: 2.5.1
+    title: 权限接口
+    version: 1.0
     contact:
       email: zhangsan@qq.com
       name: zhangsan

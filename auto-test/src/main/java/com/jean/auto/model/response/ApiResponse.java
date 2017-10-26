@@ -1,6 +1,6 @@
 package com.jean.auto.model.response;
 
-public class ModuleResponse {
+public class ApiResponse {
 
     private Long id;
 
@@ -8,7 +8,7 @@ public class ModuleResponse {
 
     private String description;
 
-    public ModuleResponse(Long id, String name, String description) {
+    public ApiResponse(Long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;

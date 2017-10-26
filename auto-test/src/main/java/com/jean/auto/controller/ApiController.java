@@ -3,11 +3,15 @@ package com.jean.auto.controller;
 import com.jean.auto.constant.CommonConstant;
 import com.jean.auto.entity.Api;
 import com.jean.auto.entity.Module;
+import com.jean.auto.entity.QApi;
 import com.jean.auto.model.common.ApiResultListHelper;
 import com.jean.auto.model.common.ApiSimpleResultHelper;
 import com.jean.auto.model.request.AddApiRequest;
 import com.jean.auto.model.request.ModifyApiRequest;
+import com.jean.auto.model.response.ApiResponse;
+import com.jean.auto.service.IApiService;
 import com.jean.auto.service.IModuleService;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,6 +34,9 @@ public class ApiController extends BaseController<Api, Long> {
 
     @Autowired
     private IModuleService moduleService;
+
+    @Autowired
+    private JPAQueryFactory jpaQueryFactory;
 
     @PostMapping
     ApiSimpleResultHelper<Api> add(@RequestBody @Valid AddApiRequest request) {
@@ -93,5 +100,22 @@ public class ApiController extends BaseController<Api, Long> {
         listHelper.setTotal(all.getTotalElements());
         listHelper.setTotalPages(all.getTotalPages());
         return listHelper;
+    }
+
+
+    @GetMapping("/names")
+    ApiSimpleResultHelper<List<ApiResponse>> names(@RequestParam(value = "module_id", required = false) Long moduleId) {
+        List<ApiResponse> modules = ((IApiService) baseService).findAllNames(moduleId);
+        return new ApiSimpleResultHelper<>(CommonConstant.ApiResponse.SUCCESS, modules);
+    }
+
+    void test() {
+        QApi _Q_api = QApi.api;
+        jpaQueryFactory.select(_Q_api.id, _Q_api.name, _Q_api.createdTime)
+                .from(_Q_api)
+                .where(_Q_api.name.like("").and(_Q_api.module.name.like("")))
+                .groupBy(_Q_api.module.id)
+                .orderBy(_Q_api.createdTime.desc())
+                .fetch();
     }
 }

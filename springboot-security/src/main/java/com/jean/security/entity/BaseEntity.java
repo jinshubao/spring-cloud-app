@@ -10,24 +10,24 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
 
+/**
+ * @author jinshubao
+ */
 @MappedSuperclass
 @JsonIgnoreProperties({"hibernateLazyInitializer", "new"})
 public abstract class BaseEntity extends AbstractPersistable<Long> {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false)
-    protected Date createdTime;
+    private Date createdTime;
 
     @Temporal(TemporalType.TIMESTAMP)
-    protected Date modifiedTime;
+    private Date modifiedTime;
 
     @Column(length = 500)
-    protected String remark;
+    private String description;
 
-    @Column(length = 500)
-    protected String description;
-
-    protected boolean enabled;
+    private boolean enabled;
 
 
     public Date getCreatedTime() {
@@ -46,14 +46,6 @@ public abstract class BaseEntity extends AbstractPersistable<Long> {
         this.modifiedTime = modifiedTime;
     }
 
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -68,5 +60,15 @@ public abstract class BaseEntity extends AbstractPersistable<Long> {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (createdTime != null ? createdTime.hashCode() : 0);
+        result = 31 * result + (modifiedTime != null ? modifiedTime.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (enabled ? 1 : 0);
+        return result;
     }
 }

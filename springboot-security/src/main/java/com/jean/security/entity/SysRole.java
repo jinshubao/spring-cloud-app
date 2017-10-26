@@ -5,6 +5,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.util.Set;
 
+/**
+ * @author jinshubao
+ */
 @Entity
 @Table(name = "sys_role")
 @DynamicUpdate
@@ -35,5 +38,18 @@ public class SysRole extends BaseEntity {
 
     public void setAuthorities(Set<SysAuthority> authorities) {
         this.authorities = authorities;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (authorities != null ? authorities.hashCode() : 0);
+        return result;
     }
 }

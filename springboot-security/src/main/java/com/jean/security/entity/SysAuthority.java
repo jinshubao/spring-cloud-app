@@ -5,6 +5,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.util.Set;
 
+/**
+ * @author jinshubao
+ */
 @Entity
 @Table(name = "sys_authority")
 @DynamicUpdate
@@ -34,5 +37,18 @@ public class SysAuthority extends BaseEntity {
 
     public void setResources(Set<SysResource> resources) {
         this.resources = resources;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+       return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (resources != null ? resources.hashCode() : 0);
+        return result;
     }
 }

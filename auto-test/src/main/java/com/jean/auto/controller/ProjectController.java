@@ -19,7 +19,7 @@ public class ProjectController extends BaseController<Project, Long> {
 
     @GetMapping("/names")
     ApiSimpleResultHelper<List<ProjectResponse>> names() {
-        List<ProjectResponse> modules = ((IProjectService) baseService).findAllProjectNames();
+        List<ProjectResponse> modules = ((IProjectService) baseService).findAllNames();
         return new ApiSimpleResultHelper<>(CommonConstant.ApiResponse.SUCCESS, modules);
     }
 

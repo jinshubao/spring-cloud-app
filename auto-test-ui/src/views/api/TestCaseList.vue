@@ -2,18 +2,6 @@
     <section>
         <search-bar @search="handleSearch">
             <el-button type="success" @click="handleAdd">新增</el-button>
-            <!--<el-select v-model="CUSTOMER_PARAMS.project_id" placeholder="项目" clearable>
-                <el-option v-for="item in projects"
-                           :key="item.id"
-                           :label="item.name"
-                           :value="item.id"></el-option>
-            </el-select>
-            <el-select v-model="CUSTOMER_PARAMS.module_id" placeholder="模块" clearable>
-                <el-option v-for="item in modules"
-                           :key="item.id"
-                           :label="item.name"
-                           :value="item.id"></el-option>
-            </el-select>-->
         </search-bar>
         <!--列表-->
         <el-table :data="RESULT_DATA.data"
@@ -46,10 +34,11 @@
             </el-table-column>
             <el-table-column label="操作">
                 <template scope="scope">
-                    <el-button type="primary" size="small" @click="executeTestCase(scope.row)" >
+                    <el-button type="primary" size="small" @click="executeTestCase(scope.row)">
                         <i class="el-icon-caret-left"></i>
                     </el-button>
-                    <el-button type="primary" size="small" @click="handleEdit(scope.$index, scope.row)" icon="edit"></el-button>
+                    <el-button type="primary" size="small" @click="handleEdit(scope.$index, scope.row)"
+                               icon="edit"></el-button>
                     <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)"
                                icon="delete"></el-button>
                 </template>
@@ -66,17 +55,27 @@
                        style="float:right;">
         </el-pagination>
 
+        <add-test-case-dialog :options="projectNames"
+                              :submitButtonLoading="ADD_BUTTON_LOADING"
+                              :dialogOpenFlag="ADD_DIALOG_OPEN_FLAG"
+                              @submit="addSubmit"
+                              @cancel="handleAddCancel">
+        </add-test-case-dialog>
+
     </section>
 </template>
 
 <script>
 
-    import SearchBar from '../../components/SearchBar.vue'
+    import SearchBar from '../../components/SearchBar'
     import TestCaseApi from '../../api/TestCaseApi';
     import TestApi from '../../api/TestApi';
     import projectApi from '../../api/projectApi';
+    import ApiApi from '../../api/ApiApi';
     import BaseMethod from '../../common/BaseMethod';
     import BaseData from '../../common/BaseData';
+    import AddTestCaseDialog from '../../components/AddTestCaseDialog';
+
 
     import {
         ADD_BUTTON_LOADING,
@@ -90,11 +89,11 @@
     } from '../../common/constant'
 
     export default {
-        components: {SearchBar},
+        components: {SearchBar, AddTestCaseDialog},
         data() {
             return {
                 ...BaseData,
-                projects: [],
+                projectNames: [],
                 modules: [],
                 CUSTOMER_PARAMS: {
                     project_id: '',
@@ -122,7 +121,9 @@
         },
         mounted() {
             projectApi.allProjectNames().then((res) => {
-                this.projects = res.data.data;
+                this.projectNames = res.data.data;
+            }, (err) => {
+
             });
             this.loadData();
         }

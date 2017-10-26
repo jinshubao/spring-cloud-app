@@ -11,37 +11,39 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author jinshubao
+ */
 public abstract class BaseService<T extends BaseEntity> {
 
-    @Autowired
     protected JpaRepository<T, Long> repository;
 
-    @Transactional(readOnly = true)
+    @Autowired
+    public void setRepository(JpaRepository<T, Long> repository) {
+        this.repository = repository;
+    }
+
     public List<T> findAll() {
         return this.repository.findAll();
     }
 
-    @Transactional(readOnly = true)
     public List<T> findAll(Sort sort) {
         return this.repository.findAll(sort);
     }
 
-    @Transactional(readOnly = true)
     public <S extends T> List<S> findAll(Example<S> example) {
         return this.repository.findAll(example);
     }
 
-    @Transactional(readOnly = true)
     public <S extends T> List<S> findAll(Example<S> example, Sort sort) {
         return this.repository.findAll(example, sort);
     }
 
-    @Transactional
     public T findOne(Long id) {
         return repository.findOne(id);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public T save(T t) {
         Date now = new Date();
         t.setCreatedTime(now);
@@ -49,13 +51,13 @@ public abstract class BaseService<T extends BaseEntity> {
         return repository.save(t);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void delete(T t) {
         t.setEnabled(false);
         repository.save(t);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public T update(T t) {
         Date now = new Date();
         t.setModifiedTime(now);

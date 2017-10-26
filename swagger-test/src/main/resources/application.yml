@@ -13,26 +13,21 @@ info:
 swagger:
   enable: true
   api-info:
-    description: User接口
+    title: 接口
+    description: API接口
+    terms-of-service-url: http://www.test.com
     license:
       name: test
       url: http://www.test.com
-    terms-of-service-url: http://www.test.com
-    title: User接口
-    version: 2.5.1
+    version: 1.0
     contact:
       email: zhangsan@qq.com
       name: zhangsan
       url: http://www.test.com
-  docket:
-    enable: true
-    groupName: USER
-    apiPackage: com.jean.test.api
-    pathPrefix: /
-  responseMessage:
-    - code: 200
-      message: ok
-    - code: 400
-      message: 非法请求
-    - code: 500
-      message: 服务器忙
+  dockets:
+    user:
+      groupName: USER
+      paths: /user/**
+    order:
+      groupName: ORDER
+      pathPrefix: /order/**

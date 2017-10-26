@@ -10,24 +10,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
 
 
+/**
+ * @author jinshubao
+ */
 @Service
-public class SysUserDetailService implements UserDetailsService {
+public class SysUserDetailServiceImpl implements UserDetailsService {
 
     private final SysUserRepository sysUserRepository;
 
     @Autowired
-    public SysUserDetailService(SysUserRepository sysUserRepository) {
+    public SysUserDetailServiceImpl(SysUserRepository sysUserRepository) {
         this.sysUserRepository = sysUserRepository;
     }
 
     @Override
-    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         SysUser user = sysUserRepository.findByUsername(username);
         if (user == null) {
@@ -42,7 +43,7 @@ public class SysUserDetailService implements UserDetailsService {
                 user.isEnabled(),
                 user.isAccountNonExpired(),
                 user.isCredentialsNonExpired(),
-                user.isAccountNonLocked()
-                , authorities);
+                user.isAccountNonLocked(),
+                authorities);
     }
 }

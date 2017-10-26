@@ -7,6 +7,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.util.Set;
 
+/**
+ * @author jinshubao
+ */
 @Entity
 @Table(name = "sys_user")
 @DynamicUpdate
@@ -88,5 +91,23 @@ public class SysUser extends BaseEntity {
 
     public void setRoles(Set<SysRole> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (accountNonExpired ? 1 : 0);
+        result = 31 * result + (accountNonLocked ? 1 : 0);
+        result = 31 * result + (credentialsNonExpired ? 1 : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (roles != null ? roles.hashCode() : 0);
+        return result;
     }
 }

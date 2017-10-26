@@ -2,22 +2,22 @@ package com.jean.swagger.properties;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import springfox.documentation.service.Tag;
 import springfox.documentation.swagger.web.UiConfiguration;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static com.google.common.collect.Sets.newHashSet;
-
+/**
+ * @author jinshubao
+ */
 @ConfigurationProperties(prefix = "swagger")
 public class SwaggerProperties {
 
-    private boolean enable = true;
-
     private ApiInfoProperties apiInfo = new ApiInfoProperties();
 
-    private DocketProperties docket = new DocketProperties();
+    private Map<String, DocketProperties> dockets = new HashMap<>();
 
     private List<ResponseMessageProperties> responseMessage = new ArrayList<>();
 
@@ -30,15 +30,6 @@ public class SwaggerProperties {
             true,
             true);
 
-
-    public boolean isEnable() {
-        return enable;
-    }
-
-    public void setEnable(boolean enable) {
-        this.enable = enable;
-    }
-
     public ApiInfoProperties getApiInfo() {
         return apiInfo;
     }
@@ -47,12 +38,12 @@ public class SwaggerProperties {
         this.apiInfo = apiInfo;
     }
 
-    public DocketProperties getDocket() {
-        return docket;
+    public Map<String, DocketProperties> getDockets() {
+        return dockets;
     }
 
-    public void setDocket(DocketProperties docket) {
-        this.docket = docket;
+    public void setDockets(Map<String, DocketProperties> dockets) {
+        this.dockets = dockets;
     }
 
     public List<ResponseMessageProperties> getResponseMessage() {
@@ -76,7 +67,7 @@ public class SwaggerProperties {
         private String description;
         private String termsOfServiceUrl;
         private String version;
-        private ContactProperties contact;
+        private ContactProperties contact = new ContactProperties();
         private LicenseProperties license = new LicenseProperties();
 
         public String getTitle() {
@@ -129,98 +120,6 @@ public class SwaggerProperties {
         }
     }
 
-    public static class DocketProperties {
-        private boolean enable = false;
-        private Set<String> protocols = newHashSet();
-        private Set<String> produces = newHashSet();
-        private Set<String> consumes = newHashSet();
-        private Set<Tag> tags = newHashSet();
-        private String groupName;
-        private String apiPackage;
-        private Set<String> paths;
-        private String pathPrefix;
-        private String host = "";
-
-        public String getGroupName() {
-            return groupName;
-        }
-
-        public void setGroupName(String groupName) {
-            this.groupName = groupName;
-        }
-
-        public String getApiPackage() {
-            return apiPackage;
-        }
-
-        public void setApiPackage(String apiPackage) {
-            this.apiPackage = apiPackage;
-        }
-
-        public String getPathPrefix() {
-            return pathPrefix;
-        }
-
-        public void setPathPrefix(String pathPrefix) {
-            this.pathPrefix = pathPrefix;
-        }
-
-        public Set<String> getPaths() {
-            return paths;
-        }
-
-        public void setPaths(Set<String> paths) {
-            this.paths = paths;
-        }
-
-        public Set<String> getProtocols() {
-            return protocols;
-        }
-
-        public void setProtocols(Set<String> protocols) {
-            this.protocols = protocols;
-        }
-
-        public Set<String> getProduces() {
-            return produces;
-        }
-
-        public void setProduces(Set<String> produces) {
-            this.produces = produces;
-        }
-
-        public Set<String> getConsumes() {
-            return consumes;
-        }
-
-        public void setConsumes(Set<String> consumes) {
-            this.consumes = consumes;
-        }
-
-        public Set<Tag> getTags() {
-            return tags;
-        }
-
-        public void setTags(Set<Tag> tags) {
-            this.tags = tags;
-        }
-
-        public String getHost() {
-            return host;
-        }
-
-        public void setHost(String host) {
-            this.host = host;
-        }
-
-        public boolean isEnable() {
-            return enable;
-        }
-
-        public void setEnable(boolean enable) {
-            this.enable = enable;
-        }
-    }
 
     public static class LicenseProperties {
 
@@ -328,6 +227,7 @@ public class SwaggerProperties {
 
         public UiConfigurationProperties() {
         }
+
         public UiConfigurationProperties(String validatorUrl, String docExpansion, String apisSorter, String defaultModelRendering, Long requestTimeout, String[] supportedSubmitMethods, boolean jsonEditor, boolean showRequestHeaders) {
             this.validatorUrl = validatorUrl;
             this.docExpansion = docExpansion;

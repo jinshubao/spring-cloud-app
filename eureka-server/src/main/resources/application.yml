@@ -1,9 +1,9 @@
 server:
-  port: 8761
+  port: \${SERVER_PORT:8761}
 
 spring:
   application:
-    name: eureka-server
+    name: \${SPRING_APPLICATION_NAME:eureka-server}
 
 eureka:
   server:
@@ -19,7 +19,7 @@ eureka:
       default-zone: http://\${eureka.instance.hostname}:\${server.port}/eureka/
 logging:
   level: info
-  file: target/log.log
+  path: /logs
 
 management:
   info:

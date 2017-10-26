@@ -4,6 +4,9 @@ import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
 import org.springframework.security.web.FilterInvocation;
 
+/**
+ * @author jinshubao
+ */
 public class SecurityInterceptor extends AbstractSecurityInterceptor {
 
     @Override

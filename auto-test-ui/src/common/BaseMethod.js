@@ -51,57 +51,20 @@ export default {
             this[BEFORE_ADD_DIALOG_OPEN]()
         }
     },
-    handleAddCancel: function () {
-        this[ADD_DIALOG_OPEN_FLAG] = false;
-    },
+
 
     addSubmit: function (params) {
-        this[ADD_BUTTON_LOADING] = true;
-        let para = Object.assign({}, params);
-        console.log("add params:", para);
-        this.add(para).then((res) => {
-            this[ADD_BUTTON_LOADING] = false;
-            if (res.data.code === '0000') {
-                this.$message({
-                    message: '提交成功',
-                    type: 'success'
-                });
-                this.loadData();
-            } else {
-                this.$message.error(`提交失败, ${res.data.desc}`);
-            }
-            this[ADD_DIALOG_OPEN_FLAG] = false;
-            this[AFTER_ADD_SUBMIT]();
-        }, (err) => {
-            this[ADD_BUTTON_LOADING] = false;
-            this[ADD_DIALOG_OPEN_FLAG] = false;
-            this.$message.error(`提交失败, ${err}`);
-            this[AFTER_ADD_SUBMIT]();
-            console.log(err)
-        }).catch((err) => {
-            this[AFTER_ADD_SUBMIT]();
-        });
+        this[ADD_DIALOG_OPEN_FLAG] = false;
+        this.loadData();
     },
 
     handleEdit: function (index, row) {
         this[EDIT_DIALOG_OPEN_FLAG] = true;
     },
-    handleEditCancel: function () {
-        this[EDIT_DIALOG_OPEN_FLAG] = false;
-    },
 
     editSubmit: function (params) {
-        this[EDIT_BUTTON_LOADING] = true;
-        let para = Object.assign({}, params);
-        this.modify(para).then((res) => {
-            this[EDIT_BUTTON_LOADING] = false;
-            this.$message({
-                message: '提交成功',
-                type: 'success'
-            });
-            this[EDIT_DIALOG_OPEN_FLAG] = false;
-            this.loadData();
-        });
+        this[EDIT_DIALOG_OPEN_FLAG] = false;
+        this.loadData();
     },
     handleDel: function (index, row) {
         this.$confirm(`确认删除 ${row['name']} 吗?`, '提示', {
@@ -119,6 +82,13 @@ export default {
 
         });
     },
+    addCancel() {
+        this[ADD_DIALOG_OPEN_FLAG] = false;
+    },
+    editCancel() {
+        this[EDIT_DIALOG_OPEN_FLAG] = false;
+    },
+
     formatDate: function (row, column) {
         return util.formatDate.format(new Date(row[column.property]), 'yyyy-MM-dd hh:mm:ss')
     },

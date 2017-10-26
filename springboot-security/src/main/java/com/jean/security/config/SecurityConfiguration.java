@@ -30,6 +30,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 
+/**
+ * @author jinshubao
+ */
 @EnableWebSecurity
 @Configuration
 @Order(1)
@@ -54,48 +57,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new HeaderHttpSessionStrategy();
     }
 
-//    @Bean
-    FilterInvocationSecurityMetadataSource metadataSource() {
-        LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> requestMap = new LinkedHashMap<>();
-
-        // 需要验证权限的地址.
-        AntPathRequestMatcher matcher = new AntPathRequestMatcher("/user.jsp");
-        // 权限集合.
-        List<ConfigAttribute> attributes = new ArrayList<>();
-        attributes.add(new SecurityConfig("ROLE_USER"));
-        // 放入到requestMap中.
-        requestMap.put(matcher, attributes);
-        return new DefaultFilterInvocationSecurityMetadataSource(requestMap);
-    }
-
-//    @Bean
-    public Filter filter(FilterInvocationSecurityMetadataSource metadataSource) {
-        FilterSecurityInterceptor interceptor = new FilterSecurityInterceptor();
-        interceptor.setSecurityMetadataSource(metadataSource);
-        return interceptor;
-    }
-
+    @Override
     @Autowired
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailService)
-                .passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .httpBasic().and().logout()
-                .and().authorizeRequests()
+                .httpBasic()
+                .and()
+                .logout()
+                .and()
+                .authorizeRequests()
                 .antMatchers("/swagger-ui.html",
                         "/validatorUrl/**",
                         "/webjars/**",
                         "/swagger-resources/**",
                         "/v2/api-docs",
-                        "/configuration/**",
-                        "/user/**",
+                        "/configuration/**"
+//                        "/user/**",
 //                        "/resource/**",
 //                        "/authority/**",
-                        "/role/**"
+//                        "/role/**"
                 )
                 .permitAll()
                 .anyRequest()

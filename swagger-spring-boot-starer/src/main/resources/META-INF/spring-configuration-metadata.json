@@ -41,7 +41,7 @@
     {
       "sourceType": "com.jean.swagger.properties.SwaggerProperties",
       "name": "swagger.enable",
-      "defaultValue": false,
+      "defaultValue": true,
       "description": "是否启用swagger",
       "type": "java.lang.Boolean"
     },

@@ -1,11 +1,11 @@
 <template>
-    <el-dialog title="新增接口" :visible.sync="dialogVisible" :close-on-click-modal="false">
+    <el-dialog title="新增测试用例" :visible.sync="dialogVisible" :close-on-click-modal="false">
         <el-form :model="formData" label-width="80px" :rules="formRules" ref="formData">
             <el-form-item label="模块" prop="projectModule">
                 <el-cascader :options="options" :props="props" v-model="formData.projectModule">
                 </el-cascader>
             </el-form-item>
-            <el-form-item label="接口名称" prop="name">
+            <el-form-item label="接口用例" prop="name">
                 <el-input v-model="formData.name" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="URL" prop="url">
@@ -13,7 +13,9 @@
             </el-form-item>
             <el-form-item label="协议" prop="protocol">
                 <el-select v-model="formData.protocol" placeholder="请选择">
-                    <el-option v-for="item in protocols" :key="item" :index="item" :label="item"
+                    <el-option v-for="item in protocols"
+                               :key="item" :index="item"
+                               :label="item"
                                :value="item"></el-option>
                 </el-select>
             </el-form-item>

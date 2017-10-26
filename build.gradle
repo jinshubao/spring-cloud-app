@@ -20,7 +20,8 @@ allprojects {
     group 'com.jean.demo'
     version '1.0'
 
-    sourceCompatibility = 1.8
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
     [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
     repositories {
@@ -42,7 +43,6 @@ subprojects {
     ext {
         brave_mysql = "4.3.4"
         mysql = "5.1.41"
-
         swagger = "2.7.0"
     }
 
@@ -59,14 +59,12 @@ subprojects {
 
     task buildDocker(type: Docker, dependsOn: build) {
         push = false
-        baseImage = "openjdk:latest"
+        baseImage = "java:8"
         maintainer = 'jinshubao jinshubao123@126.com'
         exposePort(8080)
-        setEnvironment("SERVER_PORT", "8080")
-        setEnvironment("SPRING_APPLICATION_NAME", "${applicationName}")
         addFile("${applicationName}-${version}.jar", "app.jar")
         volume("/tmp")
-        entryPoint(["java", "-jar", "app.jar", "--server.port=\${SERVER_PORT}", "--spring.appliation.name=\${SPRING_APPLICATION_NAME}"])
+        entryPoint(["java","-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"])
         doFirst {
             copy {
                 from jar
