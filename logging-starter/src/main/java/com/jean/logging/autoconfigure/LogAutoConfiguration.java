@@ -8,13 +8,16 @@ import org.springframework.aop.Pointcut;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.AbstractPointcutAdvisor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import javax.annotation.PostConstruct;
 
 /**
- * Created by jinshubao on 2017/7/11.
+ * @author jinshubao
+ * @date 2017/7/11
  */
+@ConditionalOnProperty(havingValue = "logging.url")
 @EnableConfigurationProperties(LogProperties.class)
 public class LogAutoConfiguration extends AbstractPointcutAdvisor {
     private Logger logger = LoggerFactory.getLogger(LogAutoConfiguration.class);
@@ -23,18 +26,22 @@ public class LogAutoConfiguration extends AbstractPointcutAdvisor {
 
     private Advice advice;
 
+    private final LogProperties logProperties;
+
     @Autowired
-    private LogProperties logProperties;
+    public LogAutoConfiguration(LogProperties logProperties) {
+        this.logProperties = logProperties;
+    }
 
     @PostConstruct
     public void init() {
-        logger.info("init LogAutoConfiguration start");
+        logger.info("init logging configuration...");
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
         pointcut.setExpression(logProperties.getExpression());
         pointcut.setLocation(logProperties.getLocation());
         this.pointcut = pointcut;
-        this.advice = new LogMethodInterceptor(logProperties.getLogParams(),logProperties.getLogResult(),logProperties.getLogCost());
-        logger.info("init LogAutoConfiguration end");
+        this.advice = new LogMethodInterceptor(logProperties.getLogParams(), logProperties.getLogResult(), logProperties.getLogCost());
+        logger.info("configuration initialized");
     }
 
     @Override

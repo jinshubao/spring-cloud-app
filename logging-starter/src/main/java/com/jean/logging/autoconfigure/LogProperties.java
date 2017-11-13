@@ -3,9 +3,10 @@ package com.jean.logging.autoconfigure;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Created by jinshubao on 2017/7/11.
+ * @author jinshubao
+ * @date 2017/7/11
  */
-@ConfigurationProperties(prefix = "mylog")
+@ConfigurationProperties(prefix = "logging")
 public class LogProperties {
 
     private String expression;
@@ -17,6 +18,8 @@ public class LogProperties {
     private Boolean logResult;
 
     private Boolean logCost;
+
+    private String url;
 
     public String getExpression() {
         return expression;
@@ -56,5 +59,13 @@ public class LogProperties {
 
     public void setLogCost(Boolean logCost) {
         this.logCost = logCost;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

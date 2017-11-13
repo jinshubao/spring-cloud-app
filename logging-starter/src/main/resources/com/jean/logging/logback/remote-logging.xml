@@ -4,6 +4,7 @@
     发送日志到远程服务器
 -->
 <included>
+    <springProperty scope="context" name="LOG_REMOTE_URL" source="logging.remote.url" />
     <appender name="REMOTE_LOG" class="com.jean.logging.appender.RemoteLogAppender">
         <url>\${LOG_REMOTE_URL}</url>
     </appender>
