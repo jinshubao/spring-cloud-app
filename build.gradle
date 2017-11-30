@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.3.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.8.RELEASE")
         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.17"
         classpath('se.transmode.gradle:gradle-docker:1.2')
     }
@@ -48,7 +48,7 @@ subprojects {
 
     dependencyManagement {
         imports {
-            mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Dalston.SR1'
+            mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Dalston.SR4'
         }
     }
 

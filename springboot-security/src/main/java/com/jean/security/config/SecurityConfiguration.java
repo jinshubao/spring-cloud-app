@@ -3,31 +3,18 @@ package com.jean.security.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.SecurityConfig;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.access.intercept.DefaultFilterInvocationSecurityMetadataSource;
-import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
-import org.springframework.session.web.http.HeaderHttpSessionStrategy;
-import org.springframework.session.web.http.HttpSessionStrategy;
-
-import javax.servlet.Filter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 /**
@@ -35,32 +22,35 @@ import java.util.List;
  */
 @EnableWebSecurity
 @Configuration
-@Order(1)
+@EnableTransactionManagement
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableRedisHttpSession
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService userDetailService;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Autowired
-    public SecurityConfiguration(UserDetailsService userDetailService) {
-        this.userDetailService = userDetailService;
-    }
+    private PasswordEncoder passwordEncoder;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Autowired
+    private ObjectPostProcessor<FilterSecurityInterceptor> objectPostProcessor;
 
-    @Bean
-    public HttpSessionStrategy sessionStrategy() {
-        return new HeaderHttpSessionStrategy();
+
+    /**
+     * 该方法比userDetailsService()调用时间早
+     *
+     * @param auth
+     * @throws Exception
+     */
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
     @Override
-    @Autowired
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
+    public void configure(WebSecurity web) throws Exception {
+        super.configure(web);
     }
 
     @Override
@@ -68,10 +58,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .httpBasic()
                 .and()
-                .logout()
-                .and()
                 .authorizeRequests()
-                .antMatchers("/swagger-ui.html",
+                .antMatchers(
+                        "/login",
+                        "/logout",
+                        "/swagger-ui.html",
                         "/validatorUrl/**",
                         "/webjars/**",
                         "/swagger-resources/**",
@@ -81,9 +72,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                        "/resource/**",
 //                        "/authority/**",
 //                        "/role/**"
-                )
-                .permitAll()
-                .anyRequest()
-                .authenticated();
+                ).permitAll()
+                .anyRequest().authenticated()
+                .withObjectPostProcessor(objectPostProcessor);
     }
 }

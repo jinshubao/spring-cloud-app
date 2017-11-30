@@ -1,42 +1,20 @@
 package com.jean.security.api;
 
-import com.jean.security.entity.SysUser;
-import com.jean.security.service.SysRoleService;
-import com.jean.security.service.SysUserService;
+import com.jean.security.domain.SysUser;
+import com.jean.security.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author jinshubao
  */
 @RestController
 @RequestMapping("/user")
-public class UserApi {
-
-    private final SysUserService userService;
-
-    private final PasswordEncoder passwordEncoder;
-
-    private final SysRoleService roleService;
+public class UserApi extends BaseApi<SysUser> {
 
     @Autowired
-    public UserApi(SysUserService userService, PasswordEncoder passwordEncoder, SysRoleService roleService) {
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-        this.roleService = roleService;
-    }
-
-    @PostMapping("/add")
-    public SysUser add(@RequestBody SysUser user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userService.save(user);
-    }
-
-    @GetMapping("/list")
-    public List<SysUser> list() {
-        return userService.findAll();
+    public UserApi(ISysUserService userService) {
+        super(userService);
     }
 }

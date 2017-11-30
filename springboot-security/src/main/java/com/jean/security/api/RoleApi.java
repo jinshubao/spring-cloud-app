@@ -1,34 +1,20 @@
 package com.jean.security.api;
 
-import com.jean.security.entity.SysRole;
-import com.jean.security.service.SysRoleService;
+import com.jean.security.domain.SysRole;
+import com.jean.security.service.ISysRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author jinshubao
  */
 @RestController
 @RequestMapping("/role")
-public class RoleApi {
-
-    private final SysRoleService roleService;
+public class RoleApi extends BaseApi<SysRole> {
 
     @Autowired
-    public RoleApi(SysRoleService roleService) {
-        this.roleService = roleService;
-    }
-
-
-    @PostMapping("/add")
-    public SysRole add(@RequestBody SysRole role) {
-        return roleService.save(role);
-    }
-
-    @GetMapping("/list")
-    public List<SysRole> list() {
-        return roleService.findAll();
+    public RoleApi(ISysRoleService roleService) {
+        super(roleService);
     }
 }

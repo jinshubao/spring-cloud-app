@@ -1,10 +1,12 @@
-package com.jean.security.service;
+package com.jean.security.service.impl;
 
 
-import com.jean.security.entity.BaseEntity;
+import com.jean.security.domain.BaseEntity;
+import com.jean.security.service.IBaseService;
+import org.apache.commons.collections4.IteratorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,35 +16,17 @@ import java.util.List;
 /**
  * @author jinshubao
  */
-public abstract class BaseService<T extends BaseEntity> {
-
-    protected JpaRepository<T, Long> repository;
+public abstract class BaseServiceImpl<T extends BaseEntity> implements IBaseService<T> {
 
     @Autowired
-    public void setRepository(JpaRepository<T, Long> repository) {
-        this.repository = repository;
-    }
+    protected JpaRepository<T, Long> repository;
 
-    public List<T> findAll() {
-        return this.repository.findAll();
-    }
-
-    public List<T> findAll(Sort sort) {
-        return this.repository.findAll(sort);
-    }
-
-    public <S extends T> List<S> findAll(Example<S> example) {
-        return this.repository.findAll(example);
-    }
-
-    public <S extends T> List<S> findAll(Example<S> example, Sort sort) {
-        return this.repository.findAll(example, sort);
-    }
-
+    @Override
     public T findOne(Long id) {
         return repository.findOne(id);
     }
 
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public T save(T t) {
         Date now = new Date();
@@ -51,12 +35,14 @@ public abstract class BaseService<T extends BaseEntity> {
         return repository.save(t);
     }
 
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(T t) {
         t.setEnabled(false);
         repository.save(t);
     }
 
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public T update(T t) {
         Date now = new Date();
@@ -64,4 +50,14 @@ public abstract class BaseService<T extends BaseEntity> {
         return repository.save(t);
     }
 
+    @Override
+    public Page<T> findAll(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
+    @Override
+    public List<T> findAll() {
+        Iterable<T> iterable = repository.findAll();
+        return IteratorUtils.toList(iterable.iterator());
+    }
 }
