@@ -2,8 +2,10 @@ package com.jean.security.service;
 
 
 import com.jean.security.domain.BaseEntity;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
@@ -26,6 +28,15 @@ public interface IBaseService<T extends BaseEntity> {
      * @return 分页结果
      */
     Page<T> findAll(Pageable pageable);
+
+    /**
+     * 分页查询
+     *
+     * @param spec  参数
+     * @param pageable 分页参数
+     * @return 分页结果
+     */
+    Page<T> findAll(Specification<T> spec, Pageable pageable);
 
     /**
      * 查询单个对象

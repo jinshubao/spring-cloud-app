@@ -2,12 +2,13 @@ package com.jean.security.service.impl;
 
 
 import com.jean.security.domain.BaseEntity;
+import com.jean.security.repository.BaseRepository;
 import com.jean.security.service.IBaseService;
 import org.apache.commons.collections4.IteratorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -19,7 +20,7 @@ import java.util.List;
 public abstract class BaseServiceImpl<T extends BaseEntity> implements IBaseService<T> {
 
     @Autowired
-    protected JpaRepository<T, Long> repository;
+    protected BaseRepository<T, Long> repository;
 
     @Override
     public T findOne(Long id) {
@@ -53,6 +54,11 @@ public abstract class BaseServiceImpl<T extends BaseEntity> implements IBaseServ
     @Override
     public Page<T> findAll(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    @Override
+    public Page<T> findAll(Specification<T> spec, Pageable pageable) {
+        return repository.findAll(spec, pageable);
     }
 
     @Override

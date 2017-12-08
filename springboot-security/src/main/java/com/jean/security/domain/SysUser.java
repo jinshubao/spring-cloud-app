@@ -2,9 +2,9 @@ package com.jean.security.domain;
 
 
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * @author jinshubao
@@ -17,11 +17,8 @@ public class SysUser extends BaseEntity {
 
     private static final long serialVersionUID = -7667155827375881933L;
 
-    @NotBlank
-    @Column(unique = true, nullable = false, updatable = false)
-    private String username;
+    private String realName;
 
-    @NotBlank
     @Column(nullable = false)
     private String password;
 
@@ -30,27 +27,41 @@ public class SysUser extends BaseEntity {
     /**
      * 账户未过期
      */
-    @Column(nullable=false)
+    @Column(nullable = false)
     private Boolean accountNonExpired;
 
     /**
      * 账户未锁定
      */
-    @Column(nullable=false)
+    @Column(nullable = false)
     private Boolean accountNonLocked;
 
     /**
      * 凭证未过期
      */
-    @Column(nullable=false)
+    @Column(nullable = false)
     private Boolean credentialsNonExpired;
 
-    public String getUsername() {
-        return username;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(
+            name = "sys_user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Set<SysRole> roles;
+
+    public SysUser() {
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public SysUser(Long id) {
+        super(id);
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 
     public String getPassword() {
@@ -69,27 +80,35 @@ public class SysUser extends BaseEntity {
         this.email = email;
     }
 
-    public boolean isAccountNonExpired() {
+    public Boolean getAccountNonExpired() {
         return accountNonExpired;
     }
 
-    public void setAccountNonExpired(boolean accountNonExpired) {
+    public void setAccountNonExpired(Boolean accountNonExpired) {
         this.accountNonExpired = accountNonExpired;
     }
 
-    public boolean isAccountNonLocked() {
+    public Boolean getAccountNonLocked() {
         return accountNonLocked;
     }
 
-    public void setAccountNonLocked(boolean accountNonLocked) {
+    public void setAccountNonLocked(Boolean accountNonLocked) {
         this.accountNonLocked = accountNonLocked;
     }
 
-    public boolean isCredentialsNonExpired() {
+    public Boolean getCredentialsNonExpired() {
         return credentialsNonExpired;
     }
 
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
+    }
+
+    public Set<SysRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<SysRole> roles) {
+        this.roles = roles;
     }
 }

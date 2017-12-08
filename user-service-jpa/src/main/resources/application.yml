@@ -6,7 +6,7 @@ spring:
     name: user-service-jpa
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/user_jpa
+    url: jdbc:mysql://10.52.2.66:3306/user_jpa?useSSL=false
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
@@ -59,6 +59,7 @@ swagger:
     enable: true
     groupName: USER
     pathPrefix: /
+    apiPackage: com.jean.user.api
   responseMessage:
     - code: 200
       message: ok

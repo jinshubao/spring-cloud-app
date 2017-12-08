@@ -1,9 +1,11 @@
 package com.jean.security.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jean.security.model.enums.ResourceType;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * @author jinshubao
@@ -25,10 +27,26 @@ public class SysResource extends BaseEntity {
     /**
      * 资源, URL、菜单/页面元素标识
      */
-    @Column(length = 2000)
+    @Column(unique = true, nullable = false, length = 2000)
     private String resource;
 
+    @Column(nullable = false)
     private String method;
+
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(
+            name = "sys_resource_authority",
+            joinColumns = @JoinColumn(name = "resource_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+    private Set<SysAuthority> authorities;
+
+    public SysResource() {
+    }
+
+    public SysResource(Long id) {
+        super(id);
+    }
 
     public ResourceType getType() {
         return type;
@@ -52,5 +70,13 @@ public class SysResource extends BaseEntity {
 
     public void setMethod(String method) {
         this.method = method;
+    }
+
+    public Set<SysAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<SysAuthority> authorities) {
+        this.authorities = authorities;
     }
 }

@@ -1,12 +1,10 @@
 package com.jean.security.repository;
 
 import com.jean.security.domain.SysRole;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import com.jean.security.domain.SysUser;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author jinshubao
@@ -14,11 +12,19 @@ import java.util.List;
 public interface SysRoleRepository extends BaseRepository<SysRole, Long> {
 
     /**
-     * 按用户名查询用户角色
-     * @param username 用户名
-     * @return 角色列表
+     * 按用户查询角色
+     *
+     * @param user 用户
+     * @return 角色集合
      */
-    @Query("select r from SysUser u, SysUserRole ur, SysRole r " +
-            "where u.id = ur.userId and r.id = ur.roleId and u.username = :username")
-    Collection<SysRole> findRoles(@Param("username") String username);
+    Collection<SysRole> findByUsersIn(SysUser user);
+
+    /**
+     * 按角色名查询角色
+     *
+     * @param roleNames 角色名
+     * @return 角色集合
+     */
+    Collection<SysRole> findByNameIn(Set<String> roleNames);
+
 }

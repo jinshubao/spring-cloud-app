@@ -5,7 +5,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-redis")
     compile("org.springframework.session:spring-session-data-redis")
     compile("mysql:mysql-connector-java:${mysql}")
-    compile("com.alibaba:druid:1.1.5")
+    compile("com.alibaba:druid:${druid}")
     compile("org.apache.commons:commons-collections4:4.1")
     compile("org.apache.commons:commons-lang3:3.7")
 

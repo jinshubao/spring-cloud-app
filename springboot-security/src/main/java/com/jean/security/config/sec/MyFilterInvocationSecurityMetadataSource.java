@@ -1,7 +1,6 @@
 package com.jean.security.config.sec;
 
 import com.jean.security.service.ISysResourceService;
-import com.jean.security.service.ISysRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +27,11 @@ public class MyFilterInvocationSecurityMetadataSource implements FilterInvocatio
 
     private final ISysResourceService sysResourceService;
 
-    private final ISysRoleService sysRoleService;
-
     private final Map<String, Collection<ConfigAttribute>> resourcesMap = new HashMap<>();
 
     @Autowired
-    public MyFilterInvocationSecurityMetadataSource(ISysResourceService sysResourceService, ISysRoleService sysRoleService) {
+    public MyFilterInvocationSecurityMetadataSource(ISysResourceService sysResourceService) {
         this.sysResourceService = sysResourceService;
-        this.sysRoleService = sysRoleService;
     }
 
 

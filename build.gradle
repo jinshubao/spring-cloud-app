@@ -6,6 +6,7 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.8.RELEASE")
         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.17"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6"
         classpath('se.transmode.gradle:gradle-docker:1.2')
     }
 }
@@ -31,6 +32,7 @@ allprojects {
 
 }
 
+
 subprojects {
 
     /**
@@ -39,11 +41,13 @@ subprojects {
     apply plugin: "com.gorylenko.gradle-git-properties"
     apply plugin: 'org.springframework.boot'
     apply plugin: 'docker'
+    apply plugin: "org.sonarqube"
 
     ext {
-        brave_mysql = "4.3.4"
         mysql = "5.1.41"
         swagger = "2.7.0"
+        druid = "1.1.5"
+        lombok = "1.16.18"
     }
 
     dependencyManagement {
@@ -57,19 +61,22 @@ subprojects {
         dateFormatTimeZone = "GMT+8:00"
     }
 
-    task buildDocker(type: Docker, dependsOn: build) {
-        push = false
-        baseImage = "java:8"
+    docker {
+        baseImage "openjdk:latest"
         maintainer = 'jinshubao jinshubao123@126.com'
+        registry 'jinshubao'
+    }
+
+    distDocker {
+        push = false
         exposePort(8080)
-        addFile("${applicationName}-${version}.jar", "app.jar")
+        setEnvironment('JAVA_OPTS', '-Xms128m -Xmx256m -Djava.security.egd=file:/dev/./urandom')
         volume("/tmp")
-        entryPoint(["java","-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"])
-        doFirst {
-            copy {
-                from jar
-                into stageDir
-            }
+    }
+
+    sonarqube{
+        properties{
+            property "sonar.host.url", "http://10.52.2.203:10001/"
         }
     }
 

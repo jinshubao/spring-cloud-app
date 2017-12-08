@@ -1,12 +1,12 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   application:
     name: springboot-security
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://10.52.2.66:3306/sys_pro?useSSL=false
+    url: jdbc:mysql://10.52.2.66:3306/sys_pro?characterEncoding=UTF-8&useSSL=false
     username: root
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
@@ -15,7 +15,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-
+#    open-in-view: true
   redis:
     host: 10.52.2.66
     port: 6379
