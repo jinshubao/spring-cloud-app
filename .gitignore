@@ -8,7 +8,6 @@ target
 gradle-app.setting
 node_modules
 bower_components
-!gradle-wrapper.jar
 *.class
 .tmp
 .mtj.tmp/
@@ -16,4 +15,4 @@ bower_components
 *.jar
 *.war
 *.ear
-
+!gradle-wrapper.jar
