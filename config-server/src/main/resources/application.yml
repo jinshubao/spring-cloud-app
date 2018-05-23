@@ -9,6 +9,10 @@ spring:
         db:
           uri: https://github.com/jinshubao/config-server.git
           search-paths: config-repo
+        git:
+          default-label:
+          search-paths:
+          password:
 eureka:
   client:
     serviceUrl:

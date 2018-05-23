@@ -62,9 +62,9 @@ subprojects {
     }
 
     docker {
-        baseImage "openjdk:latest"
+        baseImage = "openjdk:latest"
         maintainer = 'jinshubao jinshubao123@126.com'
-        registry 'jinshubao'
+        registry ='jinshubao'
     }
 
     distDocker {

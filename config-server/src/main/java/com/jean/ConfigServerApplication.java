@@ -12,10 +12,10 @@ import org.springframework.core.env.ConfigurableEnvironment;
 @EnableConfigServer
 @SpringBootApplication
 @EnableDiscoveryClient
-public class Application {
+public class ConfigServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(ConfigServerApplication.class, args);
     }
 
     @Bean
