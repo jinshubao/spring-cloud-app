@@ -18,8 +18,10 @@ eureka:
     service-url:
       default-zone: http://\${eureka.instance.hostname}:\${server.port}/eureka/
 logging:
-  level: info
-  path: /logs
+  level:
+    root: info
+    com.jean: debug
+  file: /logs/\${spring.application.name}.log
 
 management:
   info:
