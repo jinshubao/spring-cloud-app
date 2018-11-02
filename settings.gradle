@@ -21,4 +21,5 @@ include 'springboot-security'
 include 'user-service-jpa'
 include 'auto-test'
 include 'java-concurrent'
+include 'netty-server'
 
