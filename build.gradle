@@ -28,7 +28,7 @@ allprojects {
     [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
     repositories {
-        
+
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'https://mirrors.huaweicloud.com/repository/maven/' }
         mavenCentral()
@@ -66,9 +66,8 @@ subprojects {
     }
 
     docker {
-        baseImage = "openjdk:latest"
+        baseImage = "openjdk:8"
         maintainer = 'jinshubao jinshubao123@126.com'
-        registry ='jinshubao'
     }
 
     distDocker {
@@ -77,6 +76,7 @@ subprojects {
         setEnvironment('JAVA_OPTS', '-Xms128m -Xmx256m -Djava.security.egd=file:/dev/./urandom')
         volume("/tmp")
         volume("/logs")
+        volume("/config")
     }
 
     sonarqube{

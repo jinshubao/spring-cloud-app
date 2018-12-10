@@ -12,6 +12,7 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.util.AttributeKey;
 import io.netty.util.CharsetUtil;
 
 import java.net.InetSocketAddress;
@@ -25,7 +26,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class NettyClient {
 
+    private static final AttributeKey<Integer> idKey = AttributeKey.newInstance("client_id");
+    private static final AttributeKey<String> nameKey = AttributeKey.newInstance("client_name");
+
     public static void main(String[] args) {
+
 
         //worker负责读写数据
         EventLoopGroup worker = new NioEventLoopGroup();
@@ -55,7 +60,8 @@ public class NettyClient {
                         //心跳处理类
                         pipeline.addLast(new HeartBeatClientHandler());
                     }
-                });
+                }).attr(idKey, 111)
+                .attr(nameKey, "客户端1");
         try {
             //发起异步连接操作 等待客户端链路关闭
             ChannelFuture future = bootstrap.connect(new InetSocketAddress("127.0.0.1", 8866)).sync();

@@ -9,6 +9,10 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.Attribute;
+import io.netty.util.AttributeKey;
+import io.netty.util.internal.logging.InternalLoggerFactory;
+import io.netty.util.internal.logging.Slf4JLoggerFactory;
 
 /**
  * TODO 少年，写点啥吧！
@@ -19,6 +23,8 @@ import io.netty.handler.logging.LoggingHandler;
 public class NettyServer {
 
     public static void main(String[] args) {
+        InternalLoggerFactory.setDefaultFactory(Slf4JLoggerFactory.INSTANCE);
+
         //boss线程监听端口，worker线程负责数据读写
         EventLoopGroup boss = new NioEventLoopGroup();
         EventLoopGroup worker = new NioEventLoopGroup();
@@ -29,13 +35,19 @@ public class NettyServer {
                 .group(boss, worker)
                 //设置socket工厂
                 .channel(NioServerSocketChannel.class)
-                .handler(new LoggingHandler(LogLevel.DEBUG))
                 //链接缓冲池的大小（ServerSocketChannel的设置）
                 .option(ChannelOption.SO_BACKLOG, 1024)
                 //设置管道工厂
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
+
+                        Attribute<Integer> clientId = socketChannel.attr(AttributeKey.newInstance("client_id"));
+                        Attribute<String> clientName = socketChannel.attr(AttributeKey.newInstance("client_name"));
+
+                        System.out.println(clientId);
+                        System.out.println(clientName);
+
                         //获取管道
                         ChannelPipeline pipeline = socketChannel.pipeline();
 
@@ -45,16 +57,17 @@ public class NettyServer {
                         pipeline.addFirst(new OutboundHandler(6));
                         pipeline.addFirst(new OutboundHandler(7));
                         pipeline.addFirst(new OutboundHandler(8));
-                        pipeline.addFirst(new OutboundHandler(9, true));
+                        pipeline.addFirst(new OutboundHandler(9));
                         pipeline.addFirst(new StringEncoder());
 
 
+                        pipeline.addLast(new LoggingHandler(LogLevel.INFO));
                         pipeline.addLast(new StringDecoder());
                         pipeline.addLast(new InboundHandler(1));
                         pipeline.addLast(new InboundHandler(2));
                         pipeline.addLast(new InboundHandler(3));
                         pipeline.addLast(new InboundHandler(4));
-                        pipeline.addLast(new InboundHandler(5, true));
+                        pipeline.addLast(new InboundHandler(5));
                     }
                 })
                 //维持链接的活跃，清除死链接(SocketChannel的设置)
@@ -93,7 +106,6 @@ class InboundHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println(index + ": " + this.getClass().getSimpleName() + ".channelRead" + ": " + msg);
         // 通知执行下一个InboundHandler
         if (lastOne) {
             ctx.writeAndFlush(msg + "[" + index + "],");
@@ -104,7 +116,6 @@ class InboundHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-        System.out.println(index + ": " + this.getClass().getSimpleName() + ".channelReadComplete" + ": ");
         ctx.flush();
     }
 }
@@ -125,11 +136,9 @@ class OutboundHandler extends ChannelOutboundHandlerAdapter {
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        System.out.println(index + ": " + this.getClass().getSimpleName() + ".write" + ": " + msg);
         // 执行下一个OutboundHandler
         if (flush) {
             ctx.writeAndFlush(msg + "[" + index + "],", promise);
-            ctx.flush();
         } else {
             super.write(ctx, msg + "[" + index + "],", promise);
         }
